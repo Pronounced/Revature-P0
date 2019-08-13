@@ -65,6 +65,7 @@ namespace PizzaBox.Client
             System.Console.WriteLine("Enter State: ");
             state = Console.ReadLine();
             ps.AddCustomer(name, addr, addr2, zip, city, state);
+            ps.PrintCustomers();
             System.Console.WriteLine();
         }
 
@@ -89,7 +90,7 @@ namespace PizzaBox.Client
             System.Console.WriteLine("Enter Toppings: (seperate with a space)");
             toppings.Add(Console.ReadLine());
             System.Console.WriteLine();
-            ps.Deliver(size, toppings);
+            ps.AddToOrder(size, toppings);
             ps.PrintPizza();
         }
     }

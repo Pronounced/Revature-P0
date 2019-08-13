@@ -7,6 +7,8 @@ namespace PizzaBox.Domain.Models
     {
         public List<string> storeAddress = new List<string>();
         private List<Pizza> pizzaList = new List<Pizza>();
+        private List<User> customerList = new List<User>();
+        private List<Orders> orderList = new List<Orders>();
 
         public Location(string name, string addr, string addr2, string zip, string city, string state)
         {
@@ -25,21 +27,33 @@ namespace PizzaBox.Domain.Models
             storeAddress.Add(State);            
         }
 
-        public void Deliver(int size, List<string> list)
+        public void AddToOrder(int size, List<string> list)
         {
             List<string> cloneList = new List<string>(list);
             Pizza newPizza = new Pizza(size, cloneList);
-            pizzaList.Add(newPizza);
+            Orders newOrder = new Orders(newPizza);
+            orderList.Add(newOrder);
         }
 
         public void AddCustomer(string name, string addr, string addr2, string zip, string city, string state)
         {
             User newCustomer = new User(name, addr, addr2, zip, city, state);
+            customerList.Add(newCustomer);
         }
 
         public void PrintPizza()
         {
             pizzaList.ForEach(Console.WriteLine);
+        }
+
+        public void PrintCustomers()
+        {
+            customerList.ForEach(Console.WriteLine);
+        }
+
+        public void PrintOrders()
+        {
+            orderList.ForEach(Console.WriteLine);
         }
     }
 }

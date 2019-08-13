@@ -1,3 +1,5 @@
+using System;
+
 namespace PizzaBox.Domain.Models
 {
     public class User : NameAndAddress
@@ -10,6 +12,11 @@ namespace PizzaBox.Domain.Models
             ZipCode = zip;
             City = city;
             State = state;
+        }
+
+        public override string ToString()
+        {
+            return $"USER: Name: {Name}";
         }
     }
 }
