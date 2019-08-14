@@ -6,8 +6,8 @@ namespace PizzaBox.Domain.Models
     public class Orders
     {
         public string NameOfCustomer { get; }
-        public int Price { get; }
-        private List<Pizza> pizzas;
+        public double Price { get; set; }
+        private List<Pizza> pizzas = new List<Pizza>();
 
         public List<Pizza> Pizzas
         {
@@ -22,9 +22,34 @@ namespace PizzaBox.Domain.Models
             }
         } 
 
-        public Orders(Pizza p)
+        public Orders()
         {
-            
+            NameOfCustomer = "Jarrett Green";
+            Price = 0;
+        }
+
+        public double calculatePrice()
+        {
+            double total = 0;
+
+            foreach (Pizza i in Pizzas)
+            {
+                total += i.calculatePrice();
+            }
+
+            Price = total;
+            return total;
+        }
+
+        public void AddPizzaToOrder(Pizza p)
+        {
+            Pizzas.Add(p);
+            calculatePrice();
+        }
+
+        public void PrintPizza()
+        {
+            Pizzas.ForEach(Console.WriteLine);
         }
 
         public override string ToString()

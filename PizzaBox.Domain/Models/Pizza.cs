@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PizzaBox.Domain.Models
 {
     public class Pizza
     {
         public string PizzaSize { get; }
-        
+
         private List<string> toppings;
 
         public List<string> Toppings
@@ -21,27 +22,27 @@ namespace PizzaBox.Domain.Models
                 toppings = value;
             }
         }
-        private List<string> pizzaSizes = new List<string>(){"Small", "Medium", "Large"};
-        public List<string> PizzaSizes 
-        { 
-            get
-            {
-                return pizzaSizes;
-            } 
-        }
-        List<string> toppingsList = new List<string>(){"Pepperoni","Mushroom","Sausage"};
-        public List<string> ToppingsList 
-        { 
-            get
-            {
-                return toppingsList;
-            } 
-        }
-        
+
+        public IDictionary<string, double> PizzaSizes { get => pizzaSizes; set => pizzaSizes = value; }
+
+        private IDictionary<string, double> pizzaSizes = new Dictionary<string, double>()
+        {
+            {"Small", 5.00}, 
+            {"Medium", 7.00}, 
+            {"Large", 9.00}
+        };
+
         public Pizza(int size, List<string> list)
         {
-            PizzaSize = pizzaSizes[size - 1];
+            PizzaSize = PizzaSizes.Keys.ElementAt(size - 1);
             Toppings = list;
+        }
+
+        public double calculatePrice()
+        {
+            double price;
+            PizzaSizes.TryGetValue(PizzaSize, out price);      
+            return (1.00 * Toppings.Count) + price;
         }
 
         public override string ToString()
