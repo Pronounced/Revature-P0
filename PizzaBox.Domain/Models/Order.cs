@@ -28,13 +28,13 @@ namespace PizzaBox.Domain.Models
             Price = 0;
         }
 
-        public double calculatePrice()
+        public double calculateOrderPrice()
         {
             double total = 0;
 
             foreach (Pizza i in Pizzas)
             {
-                total += i.calculatePrice();
+                total += i.calculatePizzaPrice();
             }
 
             Price = total;
@@ -44,7 +44,7 @@ namespace PizzaBox.Domain.Models
         public void AddPizzaToOrder(Pizza p)
         {
             Pizzas.Add(p);
-            calculatePrice();
+            calculateOrderPrice();
         }
 
         public void PrintPizza()
@@ -54,7 +54,8 @@ namespace PizzaBox.Domain.Models
 
         public override string ToString()
         {
-            return $"ORDER: Name: {NameOfCustomer}, Price: {Price}, Pizzas: {String.Join(" ", (object[])Pizzas.ToArray())}";
+            string dollars = Convert.ToDecimal(Price).ToString("C");
+            return $"ORDER: \nName: {NameOfCustomer} \nPrice: {dollars} \nPizzas: \n{String.Join("\n", (object[])Pizzas.ToArray())}";
         }   
     }
 }

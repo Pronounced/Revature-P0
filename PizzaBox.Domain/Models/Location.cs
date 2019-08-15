@@ -1,18 +1,41 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PizzaBox.Domain.Models
 {
     public class Location : NameAndAddress
     {
         private List<User> customerList = new List<User>();
+        public List<User> CustomerList { get => customerList; protected set => customerList = value; }
+
         private List<Orders> orderList = new List<Orders>();
+        public List<Orders> OrderList { get => orderList; protected set => orderList = value; }
 
         IDictionary<string, int> inventory = new Dictionary<string, int>();
+        public IDictionary<string, int> Inventory { get => inventory; protected set => inventory = value; }
 
-        public IDictionary<string, int> Inventory { get => inventory; set => inventory = value; }
+        private IDictionary<string, double> storeToppings = new Dictionary<string, double>()
+        {
+            {"Pepperoni", 1.00},
+            {"Sausage", 1.00},
+            {"Mushroom", 1.00},
+            {"Olive", 1.00},
+            {"Ham", 1.00},
+            {"Pineapple", 1.00}
+        };
+        public IDictionary<string, double> StoreToppings { get => storeToppings; set => storeToppings = value; }
+
+        public IDictionary<string, double> PizzaSizes { get => pizzaSizes; set => pizzaSizes = value; }
+        private IDictionary<string, double> pizzaSizes = new Dictionary<string, double>()
+        {
+            {"Small", 5.00}, 
+            {"Medium", 7.00}, 
+            {"Large", 9.00}
+        };
 
         Orders newOrder = new Orders();
+        
 
         public Location(string name, string addr, string addr2, string zip, string city, string state)
         {
@@ -29,38 +52,26 @@ namespace PizzaBox.Domain.Models
             Inventory.Add("Ham", 50);
             Inventory.Add("Bacon", 50);
             Inventory.Add("Spinich", 50);
+            OrderList.Add(newOrder);
+
         }
 
         public void AddToOrder(int size, List<string> list)
         {
-            List<string> cloneList = new List<string>(list);
-            Pizza newPizza = new Pizza(size, cloneList);
+            List<string> toppingsList = new List<string>();
+
+            foreach (string i in list)
+            {
+                toppingsList.Add(StoreToppings.Keys.ElementAt(Int32.Parse(i) - 1));
+            }
+            Pizza newPizza = new Pizza(PizzaSizes.Keys.ElementAt(size - 1), PizzaSizes[PizzaSizes.Keys.ElementAt(size - 1)], toppingsList);
             newOrder.AddPizzaToOrder(newPizza);
-            orderList.Add(newOrder);
         }
 
         public void AddCustomer(string name, string addr, string addr2, string zip, string city, string state)
         {
             User newCustomer = new User(name, addr, addr2, zip, city, state);
-            customerList.Add(newCustomer);
-        }
-
-        public void PrintCustomers()
-        {
-            customerList.ForEach(Console.WriteLine);
-        }
-
-        public void PrintOrders()
-        {
-            orderList.ForEach(Console.WriteLine);
-        }
-
-        public void PrintInventory()
-        {
-            foreach (KeyValuePair<string, int> item in Inventory)
-            {
-                Console.WriteLine("Ingredient: {0}, Stock: {1}", item.Key, item.Value);
-            }
+            CustomerList.Add(newCustomer);
         }
     }
 }

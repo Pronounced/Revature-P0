@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PizzaBox.Client
+﻿namespace PizzaBox.Client
 {
     class Program
     {

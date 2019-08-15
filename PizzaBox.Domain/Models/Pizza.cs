@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace PizzaBox.Domain.Models
 {
@@ -8,46 +7,40 @@ namespace PizzaBox.Domain.Models
     {
         public string PizzaSize { get; }
 
-        private List<string> toppings;
+        private List<string> userToppings;
 
-        public List<string> Toppings
+        public List<string> UserToppings
         {
             get
             {
-                return toppings;
+                return userToppings;
             }
 
             protected set
             {
-                toppings = value;
+                userToppings = value;
             }
         }
 
-        public IDictionary<string, double> PizzaSizes { get => pizzaSizes; set => pizzaSizes = value; }
+        private double crustPrice;
+        public double CrustPrice { get => crustPrice; set => crustPrice = value; }
 
-        private IDictionary<string, double> pizzaSizes = new Dictionary<string, double>()
+        
+        public Pizza(String size, double crustPrice, List<string> list)
         {
-            {"Small", 5.00}, 
-            {"Medium", 7.00}, 
-            {"Large", 9.00}
-        };
-
-        public Pizza(int size, List<string> list)
-        {
-            PizzaSize = PizzaSizes.Keys.ElementAt(size - 1);
-            Toppings = list;
+            PizzaSize = size;
+            UserToppings = list;
+            CrustPrice = crustPrice;
         }
 
-        public double calculatePrice()
+        public double calculatePizzaPrice()
         {
-            double price;
-            PizzaSizes.TryGetValue(PizzaSize, out price);      
-            return (1.00 * Toppings.Count) + price;
+            return (1.00 * UserToppings.Count) + CrustPrice;
         }
 
         public override string ToString()
         {
-            return $"PIZZA: Size: {PizzaSize}, Toppings: {String.Join(" ", Toppings.ToArray())} ";
+            return $"Size: {PizzaSize}  Toppings: {String.Join(" ", UserToppings.ToArray())} ";
         }
     }
 }

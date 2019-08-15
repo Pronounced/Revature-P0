@@ -16,8 +16,7 @@ namespace PizzaBox.Client
 
         public void DisplayMenu()
         {
-            ConsoleKeyInfo cki;
-
+            int input;
             do
             {
                 System.Console.WriteLine();
@@ -25,26 +24,43 @@ namespace PizzaBox.Client
                 System.Console.WriteLine("1. Create An Account");
                 System.Console.WriteLine("2. Place An Order");
                 System.Console.WriteLine("3. Print Inventory");
-                System.Console.WriteLine("Press Escape  to exit.");
-                cki = Console.ReadKey(false);
-                switch (cki.KeyChar.ToString())
+                System.Console.WriteLine("4. Print Order");
+                System.Console.WriteLine("5. Pring Customers");
+                System.Console.WriteLine("7. Quit");
+                
+                try
                 {
-                    case "1":
+                    input = Convert.ToInt32(Console.ReadLine());
+
+                }
+                catch (FormatException)
+                {
+                    System.Console.WriteLine("Invalid Input");
+                    input = 0;
+                }
+
+                switch (input)
+                {
+                    case 1:
                         GetInfo();
                         break;
                     
-                    case "2":
+                    case 2:
                         OrderPizza();
                         break;
 
-                    case "3":
+                    case 3:
                         PrintInventory();
+                        break;
+
+                    case 4:
+                        PrintOrders();
                         break;
 
                     default:
                         break;
                 }
-            } while (cki.Key != ConsoleKey.Escape);
+            } while (input != 7);
         }
 
         private void GetInfo()
@@ -65,7 +81,7 @@ namespace PizzaBox.Client
             state = Console.ReadLine();
             ps.AddCustomer(name, addr, addr2, zip, city, state);
             System.Console.WriteLine();
-            ps.PrintCustomers();
+            PrintCustomers();
             System.Console.WriteLine();
         }
 
@@ -73,7 +89,7 @@ namespace PizzaBox.Client
         {
             List<string> toppings = new List<string>();
             int size;
-            ConsoleKeyInfo cki;
+            string userToppings;
 
             System.Console.WriteLine();
             System.Console.WriteLine("Select a Pizza Size: ");
@@ -83,23 +99,44 @@ namespace PizzaBox.Client
 
             do
             {
+                int count = 0;
+
                 System.Console.WriteLine("Select A Topping: ");
-                System.Console.WriteLine("1. Pepperoni");
-                System.Console.WriteLine("2. Mushroom");
-                System.Console.WriteLine("3. Sausage");
-                System.Console.WriteLine("4. Olives");
-                System.Console.WriteLine("5. Pineapple");
-                toppings.Add(Console.ReadLine());
+                foreach (KeyValuePair<string, double> i in ps.StoreToppings)
+                {
+                    count++;
+                    System.Console.WriteLine(count.ToString() + "." + i.Key);
+                }
+                System.Console.WriteLine("-1 to finish");
+                userToppings = Console.ReadLine();
+                if (userToppings != "-1")
+                {
+                    toppings.Add(userToppings);                   
+                }
                 System.Console.WriteLine();
-                cki = Console.ReadKey(false);
-            }while(cki.Key != ConsoleKey.Escape);
+            }while(userToppings != "-1");
             ps.AddToOrder(size, toppings);
         }
 
-        private void PrintInventory()
+        public void PrintCustomers()
         {
             System.Console.WriteLine();
-            ps.PrintOrders();
+            ps.CustomerList.ForEach(Console.WriteLine);
+        }
+
+        public void PrintOrders()
+        {
+            System.Console.WriteLine();
+            ps.OrderList.ForEach(Console.WriteLine);
+        }
+
+        public void PrintInventory()
+        {
+            System.Console.WriteLine();
+            foreach (KeyValuePair<string, int> item in ps.Inventory)
+            {
+                Console.WriteLine($"Ingredient: {item.Key}, Stock: {item.Value}");
+            }
         }
     }
 }
