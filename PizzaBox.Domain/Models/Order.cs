@@ -43,8 +43,16 @@ namespace PizzaBox.Domain.Models
 
         public void AddPizzaToOrder(Pizza p)
         {
+            if((Pizzas.Count + 1) > 100)
+            {
+                return;
+            }
+
+            if((calculateOrderPrice() + p.calculatePizzaPrice()) > 5000)
+            {
+                return;
+            }
             Pizzas.Add(p);
-            calculateOrderPrice();
         }
 
         public void PrintPizza()
@@ -54,8 +62,13 @@ namespace PizzaBox.Domain.Models
 
         public override string ToString()
         {
+            List<string> orderPizzas = new List<string>();
+            foreach (Pizza i in Pizzas)
+            {
+                orderPizzas.Add(i.ToString());
+            }
             string dollars = Price.ToString("C");
-            return $"ORDER: \nName: {NameOfCustomer} \nPrice: {dollars} \nPizzas: \n{String.Join("\n", (object[])Pizzas.ToArray())}";
+            return $"ORDER: \nName: {NameOfCustomer} \nPrice: {dollars} \nPizzas: \n{String.Join("\n", orderPizzas.ToArray())}";
         }   
     }
 }

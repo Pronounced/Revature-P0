@@ -42,7 +42,12 @@ namespace PizzaBox.Domain.Models
 
         public override string ToString()
         {
-            return $"Size: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join("\n", (object[])UserToppings.ToArray())} ";
+            List<string> pizzaToppings = new List<string>();
+            foreach (Toppings i in UserToppings)
+            {
+                pizzaToppings.Add(i.Name);
+            }
+            return $"Size: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join(" ", pizzaToppings.ToArray())} ";
         }
     }
 }
