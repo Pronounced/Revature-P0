@@ -6,7 +6,7 @@ namespace PizzaBox.Domain.Models
     public class Orders
     {
         public string NameOfCustomer { get; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         private List<Pizza> pizzas = new List<Pizza>();
 
         public List<Pizza> Pizzas
@@ -28,9 +28,9 @@ namespace PizzaBox.Domain.Models
             Price = 0;
         }
 
-        public double calculateOrderPrice()
+        public decimal calculateOrderPrice()
         {
-            double total = 0;
+            decimal total = 0;
 
             foreach (Pizza i in Pizzas)
             {
@@ -54,7 +54,7 @@ namespace PizzaBox.Domain.Models
 
         public override string ToString()
         {
-            string dollars = Convert.ToDecimal(Price).ToString("C");
+            string dollars = Price.ToString("C");
             return $"ORDER: \nName: {NameOfCustomer} \nPrice: {dollars} \nPizzas: \n{String.Join("\n", (object[])Pizzas.ToArray())}";
         }   
     }

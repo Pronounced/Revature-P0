@@ -57,6 +57,10 @@ namespace PizzaBox.Client
                         PrintOrders();
                         break;
 
+                    case 5:
+                        PrintCustomers();
+                        break;
+
                     default:
                         break;
                 }
@@ -66,46 +70,65 @@ namespace PizzaBox.Client
         private void GetInfo()
         {
             string name, addr, addr2, zip, city, state;
-            System.Console.WriteLine();
-            System.Console.WriteLine("Enter Name: ");
-            name = Console.ReadLine();
-            System.Console.WriteLine("Enter Address: ");
-            addr = Console.ReadLine();
-            System.Console.WriteLine("Enter Address 2: ");
-            addr2 = Console.ReadLine();
-            System.Console.WriteLine("Enter Zip Code: ");
-            zip = Console.ReadLine();
-            System.Console.WriteLine("Enter City: ");
-            city = Console.ReadLine();
-            System.Console.WriteLine("Enter State: ");
-            state = Console.ReadLine();
+            do
+            {
+                System.Console.WriteLine();
+                System.Console.WriteLine("Enter Name: ");
+                name = Console.ReadLine();
+                System.Console.WriteLine("Enter Address: ");
+                addr = Console.ReadLine();
+                System.Console.WriteLine("Enter Address 2: ");
+                addr2 = Console.ReadLine();
+                System.Console.WriteLine("Enter Zip Code: ");
+                zip = Console.ReadLine();
+                System.Console.WriteLine("Enter City: ");
+                city = Console.ReadLine();
+                System.Console.WriteLine("Enter State: ");
+                state = Console.ReadLine();
+                if((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == ""))
+                {
+                    System.Console.WriteLine("All fields must have a value");
+                }
+            }while((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == ""));
             ps.AddCustomer(name, addr, addr2, zip, city, state);
-            System.Console.WriteLine();
-            PrintCustomers();
-            System.Console.WriteLine();
         }
 
         private void OrderPizza()
         {
             List<string> toppings = new List<string>();
-            int size;
+            int size, crust;
             string userToppings;
+            int count = 0;
 
             System.Console.WriteLine();
             System.Console.WriteLine("Select a Pizza Size: ");
-            System.Console.WriteLine("1. Small 2. Medium 3. Large");
+            foreach (Size i in ps.PizzaSizes)
+            {
+                count++;
+                System.Console.WriteLine(count.ToString() + "." + i.Name);
+            }
             size = Convert.ToInt32(Console.ReadLine());
+            System.Console.WriteLine();
+
+            count = 0;
+            System.Console.WriteLine();
+            System.Console.WriteLine("Select a Crust: ");
+            foreach (Crust i in ps.Crust)
+            {
+                count++;
+                System.Console.WriteLine(count.ToString() + "." + i.Name);
+            }
+            crust = Convert.ToInt32(Console.ReadLine());
             System.Console.WriteLine();
 
             do
             {
-                int count = 0;
-
+                count = 0;
                 System.Console.WriteLine("Select A Topping: ");
-                foreach (KeyValuePair<string, double> i in ps.StoreToppings)
+                foreach (Toppings i in ps.StoreToppings)
                 {
                     count++;
-                    System.Console.WriteLine(count.ToString() + "." + i.Key);
+                    System.Console.WriteLine(count.ToString() + "." + i.Name);
                 }
                 System.Console.WriteLine("-1 to finish");
                 userToppings = Console.ReadLine();
@@ -115,7 +138,7 @@ namespace PizzaBox.Client
                 }
                 System.Console.WriteLine();
             }while(userToppings != "-1");
-            ps.AddToOrder(size, toppings);
+            ps.AddToOrder(size, crust, toppings);
         }
 
         public void PrintCustomers()

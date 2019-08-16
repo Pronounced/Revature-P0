@@ -5,11 +5,12 @@ namespace PizzaBox.Domain.Models
 {
     public class Pizza
     {
-        public string PizzaSize { get; }
+        public Size PizzaSize { get; set; }
+        public Crust PizzaCrust { get; set; }
 
-        private List<string> userToppings;
+        private List<Toppings> userToppings;
 
-        public List<string> UserToppings
+        public List<Toppings> UserToppings
         {
             get
             {
@@ -21,26 +22,27 @@ namespace PizzaBox.Domain.Models
                 userToppings = value;
             }
         }
-
-        private double crustPrice;
-        public double CrustPrice { get => crustPrice; set => crustPrice = value; }
-
         
-        public Pizza(String size, double crustPrice, List<string> list)
+        public Pizza(Size size, Crust crust, List<Toppings> list)
         {
             PizzaSize = size;
             UserToppings = list;
-            CrustPrice = crustPrice;
+            PizzaCrust = crust;
         }
 
-        public double calculatePizzaPrice()
+        public decimal calculatePizzaPrice()
         {
-            return (1.00 * UserToppings.Count) + CrustPrice;
+            decimal toppingsPrice = 0;
+            foreach (Toppings i in UserToppings)
+            {
+                toppingsPrice = toppingsPrice + i.Price;
+            }
+            return (PizzaSize.Price + toppingsPrice);
         }
 
         public override string ToString()
         {
-            return $"Size: {PizzaSize}  Toppings: {String.Join(" ", UserToppings.ToArray())} ";
+            return $"Size: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join("\n", (object[])UserToppings.ToArray())} ";
         }
     }
 }

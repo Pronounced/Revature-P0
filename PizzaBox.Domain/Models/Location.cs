@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PizzaBox.Domain.Interfaces;
 
 namespace PizzaBox.Domain.Models
 {
-    public class Location : NameAndAddress
+    public class Location : INameAndAddress
     {
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string Address2 { get; set; }
+        public string ZipCode { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
         private List<User> customerList = new List<User>();
         public List<User> CustomerList { get => customerList; protected set => customerList = value; }
 
@@ -15,23 +22,32 @@ namespace PizzaBox.Domain.Models
         IDictionary<string, int> inventory = new Dictionary<string, int>();
         public IDictionary<string, int> Inventory { get => inventory; protected set => inventory = value; }
 
-        private IDictionary<string, double> storeToppings = new Dictionary<string, double>()
+        private List<Toppings> storeToppings = new List<Toppings>()
         {
-            {"Pepperoni", 1.00},
-            {"Sausage", 1.00},
-            {"Mushroom", 1.00},
-            {"Olive", 1.00},
-            {"Ham", 1.00},
-            {"Pineapple", 1.00}
+            {new Toppings("Pepperoni", 1)},
+            {new Toppings("Sausage", 1)},
+            {new Toppings("Mushroom", 1)},
+            {new Toppings("Olive", 1)},
+            {new Toppings("Ham", 1)},
+            {new Toppings("Pineapple", 1)}
         };
-        public IDictionary<string, double> StoreToppings { get => storeToppings; set => storeToppings = value; }
+        public List<Toppings> StoreToppings { get => storeToppings; set => storeToppings = value; }
 
-        public IDictionary<string, double> PizzaSizes { get => pizzaSizes; set => pizzaSizes = value; }
-        private IDictionary<string, double> pizzaSizes = new Dictionary<string, double>()
+        public List<Size> PizzaSizes { get => pizzaSizes; set => pizzaSizes = value; }
+        public List<Crust> Crust { get => crust; set => crust = value; }
+
+        private List<Size> pizzaSizes = new List<Size>()
         {
-            {"Small", 5.00}, 
-            {"Medium", 7.00}, 
-            {"Large", 9.00}
+            {new Size("Small", 5)}, 
+            {new Size("Medium", 7)}, 
+            {new Size("Large", 9)}
+        };
+
+        private List<Crust> crust = new List<Crust>()
+        {
+            {new Crust("NY", 0)},
+            {new Crust("Chicago", 0)},
+            {new Crust("Traditional", 0)}
         };
 
         Orders newOrder = new Orders();
@@ -52,19 +68,20 @@ namespace PizzaBox.Domain.Models
             Inventory.Add("Ham", 50);
             Inventory.Add("Bacon", 50);
             Inventory.Add("Spinich", 50);
+            Inventory.Add("Dough", 50);
             OrderList.Add(newOrder);
 
         }
 
-        public void AddToOrder(int size, List<string> list)
+        public void AddToOrder(int size, int crust, List<string> list)
         {
-            List<string> toppingsList = new List<string>();
+            List<Toppings> toppingsList = new List<Toppings>();
 
             foreach (string i in list)
             {
-                toppingsList.Add(StoreToppings.Keys.ElementAt(Int32.Parse(i) - 1));
+                toppingsList.Add(StoreToppings.ElementAt(Int32.Parse(i) - 1));
             }
-            Pizza newPizza = new Pizza(PizzaSizes.Keys.ElementAt(size - 1), PizzaSizes[PizzaSizes.Keys.ElementAt(size - 1)], toppingsList);
+            Pizza newPizza = new Pizza(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList);
             newOrder.AddPizzaToOrder(newPizza);
         }
 
