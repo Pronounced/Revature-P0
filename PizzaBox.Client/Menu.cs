@@ -25,7 +25,7 @@ namespace PizzaBox.Client
                 System.Console.WriteLine("2. Place An Order");
                 System.Console.WriteLine("3. Print Inventory");
                 System.Console.WriteLine("4. Print Order");
-                System.Console.WriteLine("5. Pring Customers");
+                System.Console.WriteLine("5. Print Customers");
                 System.Console.WriteLine("7. Quit");
                 
                 try
@@ -124,15 +124,15 @@ namespace PizzaBox.Client
             do
             {
                 count = 0;
-                System.Console.WriteLine("Select A Topping: ");
+                System.Console.WriteLine("Select A Topping (Minimum of " + Pizza.MINTOPPINGS + ", Max of " + Pizza.MAXTOPPINGS + "): ");
                 foreach (Toppings i in ps.StoreToppings)
                 {
                     count++;
-                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                    System.Console.WriteLine(count.ToString() + ". " + i.Name);
                 }
                 System.Console.WriteLine("-1 to finish");
                 userToppings = Console.ReadLine();
-                if (userToppings != "-1")
+                if (userToppings != "-1" && toppings.Count < Pizza.MAXTOPPINGS)
                 {
                     toppings.Add(userToppings);                   
                 }

@@ -52,6 +52,7 @@ namespace PizzaBox.Domain.Models
             {
                 return;
             }
+            calculateOrderPrice();
             Pizzas.Add(p);
         }
 

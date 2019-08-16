@@ -1,53 +1,43 @@
 using System;
-using System.Collections.Generic;
+using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models
 {
-    public class Pizza
+    public class Pizza : ABasePizza
     {
-        public Size PizzaSize { get; set; }
-        public Crust PizzaCrust { get; set; }
-
-        private List<Toppings> userToppings;
-
-        public List<Toppings> UserToppings
-        {
-            get
-            {
-                return userToppings;
-            }
-
-            protected set
-            {
-                userToppings = value;
-            }
-        }
-        
-        public Pizza(Size size, Crust crust, List<Toppings> list)
+         public Pizza(Size size, Crust crust, Toppings[] toppings)
         {
             PizzaSize = size;
-            UserToppings = list;
+            UserToppings = toppings;
             PizzaCrust = crust;
         }
 
         public decimal calculatePizzaPrice()
         {
             decimal toppingsPrice = 0;
-            foreach (Toppings i in UserToppings)
+            for(int i = 0; i < UserToppings.Length; i++)
             {
-                toppingsPrice = toppingsPrice + i.Price;
+                if(UserToppings.GetValue(i) != null)
+                {
+                    toppingsPrice = toppingsPrice + UserToppings[i].Price;
+                }
             }
             return (PizzaSize.Price + toppingsPrice);
         }
 
         public override string ToString()
         {
-            List<string> pizzaToppings = new List<string>();
-            foreach (Toppings i in UserToppings)
+            string[] pizzaToppings = new string[MAXTOPPINGS];
+
+            for(int i = 0; i < UserToppings.Length; i++)
             {
-                pizzaToppings.Add(i.Name);
+                if(UserToppings.GetValue(i) != null)
+                {
+                    pizzaToppings[i] = UserToppings[i].Name;
+                }
             }
-            return $"Size: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join(" ", pizzaToppings.ToArray())} ";
+
+            return $"Size: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join(" ", pizzaToppings)}";
         }
     }
 }

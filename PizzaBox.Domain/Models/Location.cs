@@ -1,18 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PizzaBox.Domain.Interfaces;
+using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models
 {
-    public class Location : INameAndAddress
+    public class Location : ANameAndAddress
     {
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string Address2 { get; set; }
-        public string ZipCode { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
         private List<User> customerList = new List<User>();
         public List<User> CustomerList { get => customerList; protected set => customerList = value; }
 
@@ -61,7 +55,6 @@ namespace PizzaBox.Domain.Models
             ZipCode = zip;
             City = city;
             State = state;          
-
             Inventory.Add("Pepperoni", 50);
             Inventory.Add("Mushroom", 50);
             Inventory.Add("Sausage", 50);
@@ -70,16 +63,15 @@ namespace PizzaBox.Domain.Models
             Inventory.Add("Spinich", 50);
             Inventory.Add("Dough", 50);
             OrderList.Add(newOrder);
-
         }
 
         public void AddToOrder(int size, int crust, List<string> list)
         {
-            List<Toppings> toppingsList = new List<Toppings>();
+            Toppings[] toppingsList = new Toppings[Pizza.MAXTOPPINGS];
 
             foreach (string i in list)
             {
-                toppingsList.Add(StoreToppings.ElementAt(Int32.Parse(i) - 1));
+                toppingsList[Int32.Parse(i) - 1] = StoreToppings.ElementAt(Int32.Parse(i) - 1);
             }
             Pizza newPizza = new Pizza(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList);
             newOrder.AddPizzaToOrder(newPizza);

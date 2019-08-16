@@ -1,14 +1,8 @@
-using PizzaBox.Domain.Interfaces;
+using PizzaBox.Domain.Abstracts;
 namespace PizzaBox.Domain.Models
 {
-    public class User : INameAndAddress
+    public class User : ANameAndAddress
     {
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string Address2 { get; set; }
-        public string ZipCode { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
         public User(string name, string addr, string addr2, string zip, string city, string state)
         {
             Name = name;
@@ -21,7 +15,7 @@ namespace PizzaBox.Domain.Models
 
         public override string ToString()
         {
-            return $"USER: Name: {Name}, Address: {Address}, Address 2: {Address2}, Zip: {ZipCode}, City: {City}, State: {State}";
+            return $"USER: \nName: {Name} \nAddress: {Address} \nAddress 2: {Address2} \nZip: {ZipCode} \nCity: {City} \nState: {State}";
         }
     }
 }
