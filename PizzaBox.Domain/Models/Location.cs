@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PizzaBox.Domain.Abstracts;
+using PizzaBox.Domain.Recipes;
 
 namespace PizzaBox.Domain.Models
 {
@@ -45,6 +46,8 @@ namespace PizzaBox.Domain.Models
         };
 
         Orders newOrder = new Orders();
+        Custom CustomPizza = new Custom();
+
         
 
         public Location(string name, string addr, string addr2, string zip, string city, string state)
@@ -65,7 +68,7 @@ namespace PizzaBox.Domain.Models
             OrderList.Add(newOrder);
         }
 
-        public void AddToOrder(int size, int crust, List<string> list)
+        public void AddCustomToOrder(int size, int crust, List<string> list)
         {
             Toppings[] toppingsList = new Toppings[Pizza.MAXTOPPINGS];
 
@@ -73,8 +76,7 @@ namespace PizzaBox.Domain.Models
             {
                 toppingsList[Int32.Parse(i) - 1] = StoreToppings.ElementAt(Int32.Parse(i) - 1);
             }
-            Pizza newPizza = new Pizza(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList);
-            newOrder.AddPizzaToOrder(newPizza);
+            newOrder.AddPizzaToOrder(CustomPizza.Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
         }
 
         public void AddCustomer(string name, string addr, string addr2, string zip, string city, string state)

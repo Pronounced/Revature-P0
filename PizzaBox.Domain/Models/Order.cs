@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models
 {
@@ -7,9 +8,9 @@ namespace PizzaBox.Domain.Models
     {
         public string NameOfCustomer { get; }
         public decimal Price { get; set; }
-        private List<Pizza> pizzas = new List<Pizza>();
+        private List<ABasePizza> pizzas = new List<ABasePizza>();
 
-        public List<Pizza> Pizzas
+        public List<ABasePizza> Pizzas
         {
             get
             {
@@ -32,7 +33,7 @@ namespace PizzaBox.Domain.Models
         {
             decimal total = 0;
 
-            foreach (Pizza i in Pizzas)
+            foreach (ABasePizza i in Pizzas)
             {
                 total += i.calculatePizzaPrice();
             }
@@ -41,7 +42,7 @@ namespace PizzaBox.Domain.Models
             return total;
         }
 
-        public void AddPizzaToOrder(Pizza p)
+        public void AddPizzaToOrder(ABasePizza p)
         {
             if((Pizzas.Count + 1) > 100)
             {
@@ -52,8 +53,8 @@ namespace PizzaBox.Domain.Models
             {
                 return;
             }
-            calculateOrderPrice();
             Pizzas.Add(p);
+            calculateOrderPrice();
         }
 
         public void PrintPizza()

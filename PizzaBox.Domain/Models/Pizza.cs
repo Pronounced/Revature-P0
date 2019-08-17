@@ -12,7 +12,7 @@ namespace PizzaBox.Domain.Models
             PizzaCrust = crust;
         }
 
-        public decimal calculatePizzaPrice()
+        public override decimal calculatePizzaPrice()
         {
             decimal toppingsPrice = 0;
             for(int i = 0; i < UserToppings.Length; i++)

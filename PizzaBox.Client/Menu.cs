@@ -138,7 +138,7 @@ namespace PizzaBox.Client
                 }
                 System.Console.WriteLine();
             }while(userToppings != "-1");
-            ps.AddToOrder(size, crust, toppings);
+            ps.AddCustomToOrder(size, crust, toppings);
         }
 
         public void PrintCustomers()

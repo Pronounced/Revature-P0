@@ -24,5 +24,8 @@ namespace PizzaBox.Domain.Abstracts
                 userToppings = value;
             }
         }
+
+        public abstract decimal calculatePizzaPrice();
+
     }
 }
