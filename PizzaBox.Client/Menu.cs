@@ -17,17 +17,13 @@ namespace PizzaBox.Client
         public void DisplayMenu()
         {
             int input;
+
             do
             {
-                System.Console.WriteLine();
                 System.Console.WriteLine("Select An Option");
                 System.Console.WriteLine("1. Create An Account");
-                System.Console.WriteLine("2. Place An Order");
-                System.Console.WriteLine("3. Print Inventory");
-                System.Console.WriteLine("4. Print Order");
-                System.Console.WriteLine("5. Print Customers");
-                System.Console.WriteLine("7. Quit");
-                
+                System.Console.WriteLine("2. Login");
+                System.Console.WriteLine("3. Quit");
                 try
                 {
                     input = Convert.ToInt32(Console.ReadLine());
@@ -44,35 +40,35 @@ namespace PizzaBox.Client
                     case 1:
                         GetInfo();
                         break;
-                    
+
                     case 2:
-                        OrderPizza();
-                        break;
-
-                    case 3:
-                        PrintInventory();
-                        break;
-
-                    case 4:
-                        PrintOrders();
-                        break;
-
-                    case 5:
-                        PrintCustomers();
+                        if(Login() == true)
+                        {
+                            UserMenu();
+                        }
+                        else
+                        {
+                            System.Console.WriteLine("Login Incorrect!");
+                            System.Console.WriteLine();
+                        }
                         break;
 
                     default:
                         break;
-                }
-            } while (input != 7);
+                }            
+            }while(input != 3);
         }
 
         private void GetInfo()
         {
-            string name, addr, addr2, zip, city, state;
+            string user, pass, name, addr, addr2, zip, city, state;
             do
             {
                 System.Console.WriteLine();
+                System.Console.WriteLine("Enter a User Name: ");
+                user = Console.ReadLine();
+                System.Console.WriteLine("Enter a Password: ");
+                pass = Console.ReadLine();
                 System.Console.WriteLine("Enter Name: ");
                 name = Console.ReadLine();
                 System.Console.WriteLine("Enter Address: ");
@@ -85,12 +81,12 @@ namespace PizzaBox.Client
                 city = Console.ReadLine();
                 System.Console.WriteLine("Enter State: ");
                 state = Console.ReadLine();
-                if((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == ""))
+                if((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""))
                 {
                     System.Console.WriteLine("All fields must have a value");
                 }
-            }while((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == ""));
-            ps.AddCustomer(name, addr, addr2, zip, city, state);
+            }while((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""));
+            ps.AddCustomer(user, pass, name, addr, addr2, zip, city, state);
         }
 
         private void OrderPizza()
@@ -139,6 +135,66 @@ namespace PizzaBox.Client
                 System.Console.WriteLine();
             }while(userToppings != "-1");
             ps.AddCustomToOrder(size, crust, toppings);
+        }
+
+
+        public void UserMenu()
+        {
+            int input;
+            do
+            {
+                System.Console.WriteLine();
+                System.Console.WriteLine("Select An Option");
+                System.Console.WriteLine("1. Place An Order");
+                System.Console.WriteLine("2. Print Inventory");
+                System.Console.WriteLine("3. Print Order");
+                System.Console.WriteLine("4. Print Customers");
+                System.Console.WriteLine("7. Quit");
+                
+                try
+                {
+                    input = Convert.ToInt32(Console.ReadLine());
+
+                }
+                catch (FormatException)
+                {
+                    System.Console.WriteLine("Invalid Input");
+                    input = 0;
+                }
+
+                switch (input)
+                {
+                    case 1:
+                        OrderPizza();
+                        break;
+
+                    case 2:
+                        PrintInventory();
+                        break;
+
+                    case 3:
+                        PrintOrders();
+                        break;
+
+                    case 4:
+                        PrintCustomers();
+                        break;
+
+                    default:
+                        break;
+                }
+            } while (input != 7);            
+        }
+
+        public bool Login()
+        {
+            string user, pass;
+            System.Console.WriteLine();
+            System.Console.WriteLine("Username: ");
+            user = Console.ReadLine();
+            System.Console.WriteLine("Password: ");
+            pass = Console.ReadLine();
+            return ps.LoginCheck(user,pass);
         }
 
         public void PrintCustomers()

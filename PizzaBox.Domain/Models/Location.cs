@@ -47,8 +47,7 @@ namespace PizzaBox.Domain.Models
 
         Orders newOrder = new Orders();
         Custom CustomPizza = new Custom();
-
-        
+        Login login = new Login();
 
         public Location(string name, string addr, string addr2, string zip, string city, string state)
         {
@@ -79,10 +78,23 @@ namespace PizzaBox.Domain.Models
             newOrder.AddPizzaToOrder(CustomPizza.Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
         }
 
-        public void AddCustomer(string name, string addr, string addr2, string zip, string city, string state)
+        public void AddCustomer(string user, string pass, string name, string addr, string addr2, string zip, string city, string state)
         {
-            User newCustomer = new User(name, addr, addr2, zip, city, state);
+            User newCustomer = new User(user, pass, name, addr, addr2, zip, city, state);
             CustomerList.Add(newCustomer);
+            login.UserLogin.Add(user,pass);
+        }
+
+        public bool LoginCheck(string user, string pass)
+        {
+            foreach (KeyValuePair<string,string> i in login.UserLogin)
+            {
+                if((user == i.Key) && (pass == i.Value))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

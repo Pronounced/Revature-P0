@@ -3,8 +3,13 @@ namespace PizzaBox.Domain.Models
 {
     public class User : ANameAndAddress
     {
-        public User(string name, string addr, string addr2, string zip, string city, string state)
+        public string UserName { get; set; }  
+        public string Password { get; set; }
+
+        public User(string user, string pass, string name, string addr, string addr2, string zip, string city, string state)
         {
+            UserName = user;
+            Password = pass;
             Name = name;
             Address = addr;
             Address2 = addr2;
