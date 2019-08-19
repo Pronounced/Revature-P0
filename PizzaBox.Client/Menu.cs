@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PizzaBox.Domain.Models;
+using PizzaBox.Domain.Recipes;
 
 namespace PizzaBox.Client
 {
@@ -13,6 +14,8 @@ namespace PizzaBox.Client
                 "77777",
                 "FlavorTown",
                 "Texas");
+
+        public Hawaiian hawaiian = new Hawaiian();
 
         public void DisplayMenu()
         {
@@ -89,7 +92,60 @@ namespace PizzaBox.Client
             ps.AddCustomer(user, pass, name, addr, addr2, zip, city, state);
         }
 
-        private void OrderPizza()
+        public void UserMenu()
+        {
+            int input;
+            do
+            {
+                Console.WriteLine();
+                System.Console.WriteLine("Select An Option");
+                Console.WriteLine("1. Order A Custom Pizza");
+                Console.WriteLine("2. Order A Specialty Pizza");
+                System.Console.WriteLine("3. Print Inventory");
+                System.Console.WriteLine("4. Print Order");
+                System.Console.WriteLine("5. Print Customers");
+                System.Console.WriteLine("7. Quit");
+
+                try
+                {
+                    input = Convert.ToInt32(Console.ReadLine());
+
+                }
+                catch (FormatException)
+                {
+                    System.Console.WriteLine("Invalid Input");
+                    input = 0;
+                }
+
+                switch (input)
+                {
+                    case 1:
+                        OrderCustomPizza();
+                        break;
+
+                    case 2:
+                        OrderSpecialtyPizza();
+                        break;
+
+                    case 3:
+                        PrintInventory();
+                        break;
+
+                    case 4:
+                        PrintOrders();
+                        break;
+
+                    case 5:
+                        PrintCustomers();
+                        break;
+
+                    default:
+                        break;
+                }
+            } while (input != 7);
+        }
+
+        private void OrderCustomPizza()
         {
             List<string> toppings = new List<string>();
             int size, crust;
@@ -133,57 +189,41 @@ namespace PizzaBox.Client
                     toppings.Add(userToppings);                   
                 }
                 System.Console.WriteLine();
-            }while(userToppings != "-1");
+            }while(userToppings != "-1" && toppings.Count < Pizza.MAXTOPPINGS);
             ps.AddCustomToOrder(size, crust, toppings);
         }
 
-
-        public void UserMenu()
+        private void OrderSpecialtyPizza()
         {
-            int input;
-            do
+            List<string> toppings = new List<string>();
+            int size, crust;
+            string userToppings;
+            int count = 0;
+
+            Console.WriteLine();
+
+            System.Console.WriteLine();
+            System.Console.WriteLine("Select a Pizza Size: ");
+            foreach (Size i in ps.PizzaSizes)
             {
-                System.Console.WriteLine();
-                System.Console.WriteLine("Select An Option");
-                System.Console.WriteLine("1. Place An Order");
-                System.Console.WriteLine("2. Print Inventory");
-                System.Console.WriteLine("3. Print Order");
-                System.Console.WriteLine("4. Print Customers");
-                System.Console.WriteLine("7. Quit");
-                
-                try
-                {
-                    input = Convert.ToInt32(Console.ReadLine());
+                count++;
+                System.Console.WriteLine(count.ToString() + "." + i.Name);
+            }
+            size = Convert.ToInt32(Console.ReadLine());
+            System.Console.WriteLine();
 
-                }
-                catch (FormatException)
-                {
-                    System.Console.WriteLine("Invalid Input");
-                    input = 0;
-                }
+            count = 0;
+            System.Console.WriteLine();
+            System.Console.WriteLine("Select a Crust: ");
+            foreach (Crust i in ps.Crust)
+            {
+                count++;
+                System.Console.WriteLine(count.ToString() + "." + i.Name);
+            }
+            crust = Convert.ToInt32(Console.ReadLine());
+            System.Console.WriteLine();
 
-                switch (input)
-                {
-                    case 1:
-                        OrderPizza();
-                        break;
-
-                    case 2:
-                        PrintInventory();
-                        break;
-
-                    case 3:
-                        PrintOrders();
-                        break;
-
-                    case 4:
-                        PrintCustomers();
-                        break;
-
-                    default:
-                        break;
-                }
-            } while (input != 7);            
+            ps.AddCustomToOrder(size, crust, toppings);
         }
 
         public bool Login()

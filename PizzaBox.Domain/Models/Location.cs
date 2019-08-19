@@ -33,8 +33,8 @@ namespace PizzaBox.Domain.Models
 
         private List<Size> pizzaSizes = new List<Size>()
         {
-            {new Size("Small", 5)}, 
-            {new Size("Medium", 7)}, 
+            {new Size("Small", 5)},
+            {new Size("Medium", 7)},
             {new Size("Large", 9)}
         };
 
@@ -56,7 +56,7 @@ namespace PizzaBox.Domain.Models
             Address2 = addr2;
             ZipCode = zip;
             City = city;
-            State = state;          
+            State = state;
             Inventory.Add("Pepperoni", 50);
             Inventory.Add("Mushroom", 50);
             Inventory.Add("Sausage", 50);
@@ -76,6 +76,11 @@ namespace PizzaBox.Domain.Models
                 toppingsList[Int32.Parse(i) - 1] = StoreToppings.ElementAt(Int32.Parse(i) - 1);
             }
             newOrder.AddPizzaToOrder(CustomPizza.Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
+        }
+
+        public void AddSpecialtyToOrder(Pizza p)
+        {
+            newOrder.AddPizzaToOrder(p);
         }
 
         public void AddCustomer(string user, string pass, string name, string addr, string addr2, string zip, string city, string state)
