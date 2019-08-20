@@ -22,6 +22,8 @@ namespace PizzaBox.Domain.Models
                     toppingsPrice = toppingsPrice + UserToppings[i].Price;
                 }
             }
+
+            
             return (PizzaSize.Price + toppingsPrice);
         }
 
@@ -37,7 +39,7 @@ namespace PizzaBox.Domain.Models
                 }
             }
 
-            return $"Size: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join(" ", pizzaToppings)}";
+            return $"\nSize: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join(" ", pizzaToppings)}";
         }
     }
 }

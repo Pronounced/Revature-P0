@@ -8,6 +8,9 @@ namespace PizzaBox.Domain.Models
 {
     public class Location : ANameAndAddress
     {
+        private string onlineUser;
+        public string OnlineUser { get => onlineUser; set => onlineUser = value; }
+
         private List<User> customerList = new List<User>();
         public List<User> CustomerList { get => customerList; protected set => customerList = value; }
 
@@ -50,10 +53,13 @@ namespace PizzaBox.Domain.Models
             {"Hawaiian"}
         };
 
+        private IDictionary<string, string> userLogin = new Dictionary<string, string>();
+        public IDictionary<string, string> UserLogin { get => userLogin; set => userLogin = value; }
 
-        Orders newOrder = new Orders();
         Custom CustomPizza = new Custom();
         Login login = new Login();
+
+        public Orders newOrder;
 
         public Location(string name, string addr, string addr2, string zip, string city, string state)
         {
@@ -70,7 +76,6 @@ namespace PizzaBox.Domain.Models
             Inventory.Add("Pineapple", 50);
             Inventory.Add("Olive", 50);
             Inventory.Add("Dough", 50);
-            OrderList.Add(newOrder);
         }
 
         public void AddCustomToOrder(int size, int crust, List<string> list)
@@ -93,19 +98,26 @@ namespace PizzaBox.Domain.Models
         {
             User newCustomer = new User(user, pass, name, addr, addr2, zip, city, state);
             CustomerList.Add(newCustomer);
-            login.UserLogin.Add(user,pass);
+            UserLogin.Add(user,pass);
         }
 
         public bool LoginCheck(string user, string pass)
         {
-            foreach (KeyValuePair<string,string> i in login.UserLogin)
+            foreach (KeyValuePair<string,string> i in UserLogin)
             {
                 if((user == i.Key) && (pass == i.Value))
                 {
+                    newOrder = new Orders(user);
+                    OnlineUser = user;
                     return true;
                 }
             }
             return false;
+        }
+
+        public void AddOrderToList()
+        {
+            OrderList.Add(newOrder);
         }
     }
 }

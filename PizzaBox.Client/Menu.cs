@@ -85,11 +85,11 @@ namespace PizzaBox.Client
                 city = Console.ReadLine();
                 System.Console.WriteLine("Enter State: ");
                 state = Console.ReadLine();
-                if((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""))
+                if((name || addr || addr2  || zip || city || state || user || pass) == "")
                 {
                     System.Console.WriteLine("All fields must have a value");
                 }
-            }while((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""));
+            }while((name || addr || addr2  || zip || city || state || user || pass) == "");
             ps.AddCustomer(user, pass, name, addr, addr2, zip, city, state);
         }
 
@@ -100,11 +100,11 @@ namespace PizzaBox.Client
             {
                 Console.WriteLine();
                 System.Console.WriteLine("Select An Option");
-                Console.WriteLine("1. Order A Custom Pizza");
-                Console.WriteLine("2. Order A Specialty Pizza");
-                System.Console.WriteLine("3. Print Inventory");
-                System.Console.WriteLine("4. Print Order");
-                System.Console.WriteLine("5. Print Customers");
+                System.Console.WriteLine("1. Order A Custom Pizza");
+                System.Console.WriteLine("2. Order A Specialty Pizza");
+                System.Console.WriteLine("3. Preview Order");
+                System.Console.WriteLine("4. Confirm Order");
+                System.Console.WriteLine("5. Print Previous Orders");
                 System.Console.WriteLine("7. Quit");
 
                 try
@@ -127,17 +127,17 @@ namespace PizzaBox.Client
                     case 2:
                         OrderSpecialtyPizza();
                         break;
-
+                        
                     case 3:
-                        PrintInventory();
+                        PrintOrder();
                         break;
 
                     case 4:
-                        PrintOrders();
+                        ConfirmOrder();
                         break;
 
                     case 5:
-                        PrintCustomers();
+                        PrintPreviousOrders();
                         break;
 
                     default:
@@ -250,6 +250,7 @@ namespace PizzaBox.Client
             user = Console.ReadLine();
             System.Console.WriteLine("Password: ");
             pass = Console.ReadLine();
+            ps.OnlineUser = user;
             return ps.LoginCheck(user,pass);
         }
 
@@ -259,10 +260,10 @@ namespace PizzaBox.Client
             ps.CustomerList.ForEach(Console.WriteLine);
         }
 
-        public void PrintOrders()
+        public void PrintOrder()
         {
             System.Console.WriteLine();
-            ps.OrderList.ForEach(Console.WriteLine);
+            System.Console.WriteLine(ps.newOrder);
         }
 
         public void PrintInventory()
@@ -272,6 +273,23 @@ namespace PizzaBox.Client
             {
                 Console.WriteLine($"Ingredient: {item.Key}, Stock: {item.Value}");
             }
+        }
+
+        public void PrintPreviousOrders()
+        {
+            System.Console.WriteLine();
+            foreach (Orders i in ps.OrderList)
+            {
+                if(ps.OnlineUser == i.UsernameOfCustomer)
+                {
+                    System.Console.WriteLine(i);
+                }
+            }
+        }
+
+        public void ConfirmOrder()
+        {
+            ps.AddOrderToList();
         }
     }
 }

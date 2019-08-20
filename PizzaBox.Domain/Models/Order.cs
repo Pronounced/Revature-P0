@@ -6,7 +6,7 @@ namespace PizzaBox.Domain.Models
 {
     public class Orders
     {
-        public string NameOfCustomer { get; }
+        public string UsernameOfCustomer { get; }
         public decimal Price { get; set; }
         private List<ABasePizza> pizzas = new List<ABasePizza>();
 
@@ -23,9 +23,9 @@ namespace PizzaBox.Domain.Models
             }
         } 
 
-        public Orders()
+        public Orders(string user)
         {
-            NameOfCustomer = "Jarrett Green";
+            UsernameOfCustomer = user;
             Price = 0;
         }
 
@@ -70,7 +70,7 @@ namespace PizzaBox.Domain.Models
                 orderPizzas.Add(i.ToString());
             }
             string dollars = Price.ToString("C");
-            return $"ORDER: \nName: {NameOfCustomer} \nPrice: {dollars} \nPizzas: \n{String.Join("\n", orderPizzas.ToArray())}";
+            return $"ORDER: \nName: {UsernameOfCustomer} \nPrice: {dollars} \nPizzas: \n{String.Join("\n", orderPizzas.ToArray())}";
         }   
     }
 }
