@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PizzaBox.Domain.Models;
 using PizzaBox.Domain.Recipes;
 
@@ -195,13 +196,20 @@ namespace PizzaBox.Client
 
         private void OrderSpecialtyPizza()
         {
-            List<string> toppings = new List<string>();
-            int size, crust;
-            string userToppings;
+            int size, crust, specialty;
             int count = 0;
 
             Console.WriteLine();
+            System.Console.WriteLine("Select A Specialty Pizza: ");
+            foreach (string i in ps.Specialties)
+            {
+                count++;
+                System.Console.WriteLine(count.ToString() + "." + i);
+            }            
+            specialty = Convert.ToInt32(Console.ReadLine());
+            System.Console.WriteLine();
 
+            count = 0;
             System.Console.WriteLine();
             System.Console.WriteLine("Select a Pizza Size: ");
             foreach (Size i in ps.PizzaSizes)
@@ -223,7 +231,15 @@ namespace PizzaBox.Client
             crust = Convert.ToInt32(Console.ReadLine());
             System.Console.WriteLine();
 
-            ps.AddCustomToOrder(size, crust, toppings);
+            switch(specialty)
+            {
+                case 1:
+                    ps.AddSpecialtyToOrder(hawaiian.Make(ps.PizzaSizes.ElementAt(size - 1), ps.Crust.ElementAt(crust - 1)));
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         public bool Login()

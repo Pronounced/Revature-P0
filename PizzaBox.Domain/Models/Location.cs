@@ -28,9 +28,7 @@ namespace PizzaBox.Domain.Models
         };
         public List<Toppings> StoreToppings { get => storeToppings; set => storeToppings = value; }
 
-        public List<Size> PizzaSizes { get => pizzaSizes; set => pizzaSizes = value; }
-        public List<Crust> Crust { get => crust; set => crust = value; }
-
+        public List<Size> PizzaSizes { get => pizzaSizes; set => pizzaSizes = value; }        
         private List<Size> pizzaSizes = new List<Size>()
         {
             {new Size("Small", 5)},
@@ -38,12 +36,20 @@ namespace PizzaBox.Domain.Models
             {new Size("Large", 9)}
         };
 
+        public List<Crust> Crust { get => crust; set => crust = value; }
         private List<Crust> crust = new List<Crust>()
         {
             {new Crust("NY", 0)},
             {new Crust("Chicago", 0)},
             {new Crust("Traditional", 0)}
         };
+
+        public List<string> Specialties { get => specialties; set => specialties = value; }
+        private List<string> specialties = new List<string>()
+        {
+            {"Hawaiian"}
+        };
+
 
         Orders newOrder = new Orders();
         Custom CustomPizza = new Custom();
@@ -78,7 +84,7 @@ namespace PizzaBox.Domain.Models
             newOrder.AddPizzaToOrder(CustomPizza.Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
         }
 
-        public void AddSpecialtyToOrder(Pizza p)
+        public void AddSpecialtyToOrder(ABasePizza p)
         {
             newOrder.AddPizzaToOrder(p);
         }
