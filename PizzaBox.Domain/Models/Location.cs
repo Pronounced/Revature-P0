@@ -61,8 +61,8 @@ namespace PizzaBox.Domain.Models
             Inventory.Add("Mushroom", 50);
             Inventory.Add("Sausage", 50);
             Inventory.Add("Ham", 50);
-            Inventory.Add("Bacon", 50);
-            Inventory.Add("Spinich", 50);
+            Inventory.Add("Pineapple", 50);
+            Inventory.Add("Olive", 50);
             Inventory.Add("Dough", 50);
             OrderList.Add(newOrder);
         }

@@ -149,7 +149,7 @@ namespace PizzaBox.Client
                 System.Console.WriteLine("2. Print Inventory");
                 System.Console.WriteLine("3. Print Order");
                 System.Console.WriteLine("4. Print Customers");
-                System.Console.WriteLine("7. Quit");
+                System.Console.WriteLine("7. Logout");
                 
                 try
                 {
