@@ -85,11 +85,11 @@ namespace PizzaBox.Client
                 city = Console.ReadLine();
                 System.Console.WriteLine("Enter State: ");
                 state = Console.ReadLine();
-                if((name || addr || addr2  || zip || city || state || user || pass) == "")
+                if((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""))
                 {
                     System.Console.WriteLine("All fields must have a value");
                 }
-            }while((name || addr || addr2  || zip || city || state || user || pass) == "");
+            }while((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""));
             ps.AddCustomer(user, pass, name, addr, addr2, zip, city, state);
         }
 
@@ -133,7 +133,14 @@ namespace PizzaBox.Client
                         break;
 
                     case 4:
-                        ConfirmOrder();
+                        if(ps.CheckLastOrder())
+                        {
+                            ConfirmOrder();
+                        }
+                        else
+                        {
+                            System.Console.WriteLine("Too soon after last order");
+                        }                    
                         break;
 
                     case 5:
@@ -148,9 +155,9 @@ namespace PizzaBox.Client
 
         private void OrderCustomPizza()
         {
-            List<string> toppings = new List<string>();
+            List<int> toppings = new List<int>();
             int size, crust;
-            string userToppings;
+            int userToppings;
             int count = 0;
 
             System.Console.WriteLine();
@@ -184,13 +191,13 @@ namespace PizzaBox.Client
                     System.Console.WriteLine(count.ToString() + ". " + i.Name);
                 }
                 System.Console.WriteLine("-1 to finish");
-                userToppings = Console.ReadLine();
-                if (userToppings != "-1" && toppings.Count < Pizza.MAXTOPPINGS)
+                userToppings = Int32.Parse(Console.ReadLine());
+                if (userToppings != -1 && toppings.Count <= Pizza.MAXTOPPINGS)
                 {
                     toppings.Add(userToppings);                   
                 }
                 System.Console.WriteLine();
-            }while(userToppings != "-1" && toppings.Count < Pizza.MAXTOPPINGS);
+            }while(userToppings != -1 && toppings.Count <= Pizza.MAXTOPPINGS);
             ps.AddCustomToOrder(size, crust, toppings);
         }
 

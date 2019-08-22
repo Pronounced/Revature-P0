@@ -23,6 +23,8 @@ namespace PizzaBox.Domain.Models
             }
         } 
 
+        public DateTime OrderTime { get; set; }
+
         public Orders(string user)
         {
             UsernameOfCustomer = user;

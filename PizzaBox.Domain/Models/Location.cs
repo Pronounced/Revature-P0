@@ -57,7 +57,6 @@ namespace PizzaBox.Domain.Models
         public IDictionary<string, string> UserLogin { get => userLogin; set => userLogin = value; }
 
         Custom CustomPizza = new Custom();
-        Login login = new Login();
 
         public Orders newOrder;
 
@@ -78,13 +77,13 @@ namespace PizzaBox.Domain.Models
             Inventory.Add("Dough", 50);
         }
 
-        public void AddCustomToOrder(int size, int crust, List<string> list)
+        public void AddCustomToOrder(int size, int crust, List<int> list)
         {
             Toppings[] toppingsList = new Toppings[Pizza.MAXTOPPINGS];
 
-            foreach (string i in list)
+            foreach (int i in list)
             {
-                toppingsList[Int32.Parse(i) - 1] = StoreToppings.ElementAt(Int32.Parse(i) - 1);
+                toppingsList[i - 1] = StoreToppings.ElementAt(i - 1);
             }
             newOrder.AddPizzaToOrder(CustomPizza.Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
         }
@@ -117,7 +116,27 @@ namespace PizzaBox.Domain.Models
 
         public void AddOrderToList()
         {
+            foreach (User i in CustomerList)
+            {
+                if(OnlineUser == i.UserName)
+                {
+                    i.LastOrder = DateTime.Now;
+                }
+            }
+            newOrder.OrderTime = DateTime.Now;
             OrderList.Add(newOrder);
+        }
+
+        public bool CheckLastOrder()
+        {
+            foreach (User i in CustomerList)
+            {
+                if(OnlineUser == i.UserName && DateTime.Now < i.LastOrder.Add(new TimeSpan(2,0,0)))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

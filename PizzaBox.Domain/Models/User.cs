@@ -1,3 +1,4 @@
+using System;
 using PizzaBox.Domain.Abstracts;
 namespace PizzaBox.Domain.Models
 {
@@ -5,6 +6,7 @@ namespace PizzaBox.Domain.Models
     {
         public string UserName { get; set; }  
         public string Password { get; set; }
+        public DateTime LastOrder { get; set; }
 
         public User(string user, string pass, string name, string addr, string addr2, string zip, string city, string state)
         {
