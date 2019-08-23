@@ -9,7 +9,7 @@ namespace PizzaBox.Domain.Recipes
 
         public override ABasePizza Make(Size s, Crust c)
         {
-            Data.Entities.ToppingsDb[] t = new Data.Entities.ToppingsDb[] {new Data.Entities.ToppingsDb(), new Data.Entities.ToppingsDb()};
+            Toppings[] t = new Toppings[] {new Toppings("Ham", 1), new Toppings("Pineapple", 1)};
             return new Pizza(s,c,t);
         }
     }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PizzaBox.Data.Entities;
+using DataB = PizzaBox.Data.Entities;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Recipes;
 
@@ -17,7 +17,7 @@ namespace PizzaBox.Domain.Models
 
         public IDictionary<string, int> Inventory { get; protected set; }
 
-        public List<ToppingsDb> StoreToppings { get; set; }
+        public List<Toppings> StoreToppings { get; set; }
 
         public List<Size> PizzaSizes { get; set; }
 
@@ -25,11 +25,11 @@ namespace PizzaBox.Domain.Models
 
         public List<string> Specialties { get; set; }
 
-        Custom CustomPizza = new Custom();
+        Custom CustomPizza;
 
         public Orders newOrder;
 
-        PizzaBoxDB2Context db = new PizzaBoxDB2Context();
+        DataB.PizzaBoxDB2Context db = new DataB.PizzaBoxDB2Context();
 
 
         public Location(string name, string addr, string addr2, string zip, string city, string state)
@@ -41,31 +41,23 @@ namespace PizzaBox.Domain.Models
             City = city;
             State = state;
 
-
-            StoreToppings = db.ToppingsDb.ToList();
-            // new List<Toppings>()
-            // {
-            //     {new Toppings("Pepperoni", 1)},
-            //     {new Toppings("Sausage", 1)},
-            //     {new Toppings("Mushroom", 1)},
-            //     {new Toppings("Olive", 1)},
-            //     {new Toppings("Ham", 1)},
-            //     {new Toppings("Pineapple", 1)}
-            // };
-
-            PizzaSizes = new List<Size>()
+            StoreToppings = new List<Toppings>();
+            foreach (var i in db.ToppingsDb.ToList())
             {
-                {new Size("Small", 5)},
-                {new Size("Medium", 7)},
-                {new Size("Large", 9)}
-            };
+                StoreToppings.Add(new Toppings(i.Name,i.Price));
+            }
 
-            Crust = new List<Crust>()
+            PizzaSizes = new List<Size>();
+            foreach (var i in db.Size.ToList())
             {
-                {new Crust("NY", 0)},
-                {new Crust("Chicago", 0)},
-                {new Crust("Traditional", 0)}
-            };
+                PizzaSizes.Add(new Size(i.Name, i.Price));
+            }
+
+            Crust = new List<Crust>();
+            foreach (var i in db.Crust.ToList())
+            {
+                Crust.Add(new Crust(i.Name, i.Price));
+            }
 
             Specialties = new List<string>()
             {
@@ -73,6 +65,15 @@ namespace PizzaBox.Domain.Models
             };
 
             CustomerList = new List<User>();
+            foreach (var i in db.Users.ToList())
+            {
+                CustomerList.Add(new User(new Login(db.Login.ToList().ElementAt(i.LoginId - 1).UserName, db.Login.ToList().ElementAt(i.LoginId - 1).Password),
+                i.Name,i.Address,
+                i.Address2,
+                i.ZipCode,
+                i.City,
+                i.State));
+            }
             OrderList = new List<Orders>();
             Inventory = new Dictionary<string, int>();
             newOrder = new Orders(OnlineUser);
@@ -88,13 +89,13 @@ namespace PizzaBox.Domain.Models
 
         public void AddCustomToOrder(int size, int crust, List<int> list)
         {
-            ToppingsDb[] toppingsList = new ToppingsDb[Pizza.MAXTOPPINGS];
+            Toppings[] toppingsList = new Toppings[Pizza.MAXTOPPINGS];
 
             foreach (int i in list)
             {
                 toppingsList[i - 1] = StoreToppings.ElementAt(i - 1);
             }
-            newOrder.AddPizzaToOrder(CustomPizza.Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
+            newOrder.AddPizzaToOrder(new Custom().Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
         }
 
         public void AddSpecialtyToOrder(ABasePizza p)
@@ -106,6 +107,17 @@ namespace PizzaBox.Domain.Models
         {
             User newCustomer = new User(l, name, addr, addr2, zip, city, state);
             CustomerList.Add(newCustomer);
+            db.Login.Add( new DataB.Login(){UserName = l.UserName, Password = l.Password});
+            db.Users.Add(new DataB.Users()
+            {
+                Name = name,
+                Address = addr,
+                Address2 = addr2,
+                ZipCode = zip,
+                City = city,
+                State = state
+            });
+            //db.SaveChanges();
         }
 
         public bool LoginCheck(string user, string pass)
@@ -134,7 +146,15 @@ namespace PizzaBox.Domain.Models
             }
             newOrder.OrderTime = DateTime.Now;
             OrderList.Add(newOrder);
+            db.Orders.Add(new DataB.Orders()
+            {
+                CustUserName = newOrder.UsernameOfCustomer,
+                Price = newOrder.Price,
+                OrderTime = newOrder.OrderTime
+            });
             newOrder = new Orders(OnlineUser);
+           
+            db.SaveChanges();
         }
 
         public bool CheckLastLocation()

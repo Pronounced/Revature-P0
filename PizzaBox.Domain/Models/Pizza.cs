@@ -5,7 +5,7 @@ namespace PizzaBox.Domain.Models
 {
     public class Pizza : ABasePizza
     {
-         public Pizza(Size size, Crust crust, Data.Entities.ToppingsDb[] toppings)
+         public Pizza(Size size, Crust crust, Toppings[] toppings)
         {
             PizzaSize = size;
             UserToppings = toppings;

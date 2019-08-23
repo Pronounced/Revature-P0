@@ -17,9 +17,12 @@ namespace PizzaBox.Data.Entities
 
         public virtual DbSet<Crust> Crust { get; set; }
         public virtual DbSet<Location> Location { get; set; }
+        public virtual DbSet<Login> Login { get; set; }
+        public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Pizza> Pizza { get; set; }
         public virtual DbSet<Size> Size { get; set; }
         public virtual DbSet<ToppingsDb> ToppingsDb { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -74,6 +77,26 @@ namespace PizzaBox.Data.Entities
                     .HasMaxLength(50);
             });
 
+            modelBuilder.Entity<Login>(entity =>
+            {
+                entity.ToTable("Login", "Pizza");
+
+                entity.Property(e => e.Password).HasMaxLength(50);
+
+                entity.Property(e => e.UserName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Orders>(entity =>
+            {
+                entity.ToTable("Orders", "Pizza");
+
+                entity.Property(e => e.CustUserName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Price).HasColumnType("numeric(12, 2)");
+            });
+
             modelBuilder.Entity<Pizza>(entity =>
             {
                 entity.ToTable("Pizza", "Pizza");
@@ -114,6 +137,28 @@ namespace PizzaBox.Data.Entities
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Price).HasColumnType("numeric(12, 2)");
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.ToTable("Users", "Pizza");
+
+                entity.Property(e => e.Address).HasMaxLength(50);
+
+                entity.Property(e => e.Address2).HasMaxLength(50);
+
+                entity.Property(e => e.City).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.State).HasMaxLength(50);
+
+                entity.Property(e => e.ZipCode).HasMaxLength(50);
+
+                entity.HasOne(d => d.Login)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.LoginId)
+                    .HasConstraintName("FK_LoginId");
             });
         }
     }

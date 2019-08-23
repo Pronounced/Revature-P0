@@ -3,25 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using PizzaBox.Domain.Models;
 using PizzaBox.Domain.Recipes;
+using DataB = PizzaBox.Data.Entities;
 
 namespace PizzaBox.Client
 {
     public class Menu
     {
-        static List<Location> StoreLocations = new List<Location>()
-        {
-            {new Location("Pizza Place", "101 Pizza St", "Suite 1", "77777", "FlavorTown", "Texas")},
-            {new Location("Pizza Place 2", "102 Pizza St", "Suite 2", "77777", "FlavorTown", "Texas")},
-            {new Location("Pizza Place 3", "103 Pizza St", "Suite 3", "77777", "FlavorTown", "Texas")},
-            {new Location("Pizza Place 4", "104 Pizza St", "Suite 4", "77777", "FlavorTown", "Texas")}
-        };
+        DataB.PizzaBoxDB2Context db = new DataB.PizzaBoxDB2Context();
 
-        public Location ps = StoreLocations.ElementAt(0);
+        static List<Location> StoreLocations = new List<Location>();
 
         public Hawaiian hawaiian = new Hawaiian();
 
+        public Location PizzaStore { get; set; }
+
         public void DisplayMenu()
         {
+            foreach (var i in db.Location.ToList())
+            {
+                StoreLocations.Add(new Location(i.Name,i.Address,i.Address2,i.ZipCode,i.City,i.State));
+            }
+
+            PizzaStore = StoreLocations.ElementAt(0);
+
             int input;
 
             do
@@ -37,7 +41,7 @@ namespace PizzaBox.Client
                 }
                 catch (FormatException)
                 {
-                    System.Console.WriteLine("Invalid Input");
+                    System.Console.WriteLine("\nInvalid Input\n");
                     input = 0;
                 }
 
@@ -54,8 +58,7 @@ namespace PizzaBox.Client
                         }
                         else
                         {
-                            System.Console.WriteLine("Login Incorrect!");
-                            System.Console.WriteLine();
+                            System.Console.WriteLine("\nLogin Incorrect!\n");
                         }
                         break;
 
@@ -89,10 +92,10 @@ namespace PizzaBox.Client
                 state = Console.ReadLine();
                 if((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""))
                 {
-                    System.Console.WriteLine("All fields must have a value");
+                    System.Console.WriteLine("\nAll fields must have a value\n");
                 }
             }while((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""));
-            ps.AddCustomer(new Login(user,pass), name, addr, addr2, zip, city, state);
+            PizzaStore.AddCustomer(new Login(user,pass), name, addr, addr2, zip, city, state);
         }
 
         public void UserMenu()
@@ -108,8 +111,7 @@ namespace PizzaBox.Client
                 System.Console.WriteLine("4. Confirm Order");
                 System.Console.WriteLine("5. Print Previous Orders");
                 System.Console.WriteLine("6. Change Locations");
-                System.Console.WriteLine("7. Quit");
-
+                System.Console.WriteLine("7. Log Out");
                 try
                 {
                     input = Convert.ToInt32(Console.ReadLine());
@@ -117,7 +119,7 @@ namespace PizzaBox.Client
                 }
                 catch (FormatException)
                 {
-                    System.Console.WriteLine("Invalid Input");
+                    System.Console.WriteLine("\nInvalid Input\n");
                     input = 0;
                 }
 
@@ -136,13 +138,13 @@ namespace PizzaBox.Client
                         break;
 
                     case 4:
-                        if(!ps.CheckLastLocation())
+                        if(!PizzaStore.CheckLastLocation())
                         {
-                            System.Console.WriteLine("\nYou can only order from 1 location a day");
+                            System.Console.WriteLine("\nYou can only order from 1 location a day\n");
                         }
-                        else if(!ps.CheckLastOrder())
+                        else if(!PizzaStore.CheckLastOrder())
                         {
-                            System.Console.WriteLine("\nToo soon after last order");
+                            System.Console.WriteLine("\nToo soon after last order\n");
                         }
                         else
                         {
@@ -171,58 +173,65 @@ namespace PizzaBox.Client
             int userToppings;
             int count = 0;
 
-            System.Console.WriteLine();
-            System.Console.WriteLine("Select a Pizza Size: ");
-            foreach (Size i in ps.PizzaSizes)
-            {
-                count++;
-                System.Console.WriteLine(count.ToString() + "." + i.Name);
-            }
-            size = Convert.ToInt32(Console.ReadLine());
-            System.Console.WriteLine();
-
-            count = 0;
-            System.Console.WriteLine();
-            System.Console.WriteLine("Select a Crust: ");
-            foreach (Crust i in ps.Crust)
-            {
-                count++;
-                System.Console.WriteLine(count.ToString() + "." + i.Name);
-            }
-            crust = Convert.ToInt32(Console.ReadLine());
-            System.Console.WriteLine();
-
-            do
-            {
-                count = 0;
-                System.Console.WriteLine("Select A Topping (Minimum of " + Pizza.MINTOPPINGS + ", Max of " + Pizza.MAXTOPPINGS + "): ");
-                foreach (Data.Entities.ToppingsDb i in ps.StoreToppings)
-                {
-                    count++;
-                    System.Console.WriteLine(count.ToString() + ". " + i.Name);
-                }
-                userToppings = Int32.Parse(Console.ReadLine());
-                toppings.Add(userToppings);                   
+            try
+            {            
                 System.Console.WriteLine();
-            }while(toppings.Count < Pizza.MINTOPPINGS);
-            do
-            {
-                count = 0;
-                System.Console.WriteLine("Select A Topping (Minimum of " + Pizza.MINTOPPINGS + ", Max of " + Pizza.MAXTOPPINGS + "): ");
-                foreach (Data.Entities.ToppingsDb i in ps.StoreToppings)
+                System.Console.WriteLine("Select a Pizza Size: ");
+                foreach (Size i in PizzaStore.PizzaSizes)
                 {
                     count++;
-                    System.Console.WriteLine(count.ToString() + ". " + i.Name);
+                    System.Console.WriteLine(count.ToString() + "." + i.Name);
                 }
-                System.Console.WriteLine("-1 to finish");
-                userToppings = Int32.Parse(Console.ReadLine());
-                if (userToppings != -1 && toppings.Count < Pizza.MAXTOPPINGS)
+                size = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine();
+
+                count = 0;
+                System.Console.WriteLine();
+                System.Console.WriteLine("Select a Crust: ");
+                foreach (Crust i in PizzaStore.Crust)
                 {
+                    count++;
+                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                }
+                crust = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine();
+
+                do
+                {
+                    count = 0;
+                    System.Console.WriteLine("Select A Topping (Minimum of " + Pizza.MINTOPPINGS + ", Max of " + Pizza.MAXTOPPINGS + "): ");
+                    foreach (Toppings i in PizzaStore.StoreToppings)
+                    {
+                        count++;
+                        System.Console.WriteLine(count.ToString() + ". " + i.Name);
+                    }
+                    userToppings = Int32.Parse(Console.ReadLine());
                     toppings.Add(userToppings);                   
-                }
-                System.Console.WriteLine();
-            }while(userToppings != -1 && toppings.Count < Pizza.MAXTOPPINGS);
-            ps.AddCustomToOrder(size, crust, toppings);
+                    System.Console.WriteLine();
+                }while(toppings.Count < Pizza.MINTOPPINGS);
+                do
+                {
+                    count = 0;
+                    System.Console.WriteLine("Select A Topping (Minimum of " + Pizza.MINTOPPINGS + ", Max of " + Pizza.MAXTOPPINGS + "): ");
+                    foreach (Toppings i in PizzaStore.StoreToppings)
+                    {
+                        count++;
+                        System.Console.WriteLine(count.ToString() + ". " + i.Name);
+                    }
+                    System.Console.WriteLine("-1 to finish");
+                    userToppings = Int32.Parse(Console.ReadLine());
+                    if (userToppings != -1 && toppings.Count < Pizza.MAXTOPPINGS)
+                    {
+                        toppings.Add(userToppings);                   
+                    }
+                    System.Console.WriteLine();
+                }while(userToppings != -1 && toppings.Count < Pizza.MAXTOPPINGS);
+                PizzaStore.AddCustomToOrder(size, crust, toppings);
+            }
+            catch (FormatException)
+            {
+                System.Console.WriteLine("\nInvalid Input\n");
+            }
         }
 
         private void OrderSpecialtyPizza()
@@ -230,46 +239,52 @@ namespace PizzaBox.Client
             int size, crust, specialty;
             int count = 0;
 
-            Console.WriteLine();
-            System.Console.WriteLine("Select A Specialty Pizza: ");
-            foreach (string i in ps.Specialties)
+            try
             {
-                count++;
-                System.Console.WriteLine(count.ToString() + "." + i);
-            }            
-            specialty = Convert.ToInt32(Console.ReadLine());
-            System.Console.WriteLine();
+                Console.WriteLine();
+                System.Console.WriteLine("Select A Specialty Pizza: ");
+                foreach (string i in PizzaStore.Specialties)
+                {
+                    count++;
+                    System.Console.WriteLine(count.ToString() + "." + i);
+                }            
+                specialty = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine();
 
-            count = 0;
-            System.Console.WriteLine();
-            System.Console.WriteLine("Select a Pizza Size: ");
-            foreach (Size i in ps.PizzaSizes)
-            {
-                count++;
-                System.Console.WriteLine(count.ToString() + "." + i.Name);
+                count = 0;
+                System.Console.WriteLine();
+                System.Console.WriteLine("Select a Pizza Size: ");
+                foreach (Size i in PizzaStore.PizzaSizes)
+                {
+                    count++;
+                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                }
+                size = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine();
+
+                count = 0;
+                System.Console.WriteLine();
+                System.Console.WriteLine("Select a Crust: ");
+                foreach (Crust i in PizzaStore.Crust)
+                {
+                    count++;
+                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                }
+                crust = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine();
+                switch(specialty)
+                {
+                    case 1:
+                        PizzaStore.AddSpecialtyToOrder(hawaiian.Make(PizzaStore.PizzaSizes.ElementAt(size - 1), PizzaStore.Crust.ElementAt(crust - 1)));
+                        break;
+
+                    default:
+                        break;
+                }
             }
-            size = Convert.ToInt32(Console.ReadLine());
-            System.Console.WriteLine();
-
-            count = 0;
-            System.Console.WriteLine();
-            System.Console.WriteLine("Select a Crust: ");
-            foreach (Crust i in ps.Crust)
+            catch (FormatException)
             {
-                count++;
-                System.Console.WriteLine(count.ToString() + "." + i.Name);
-            }
-            crust = Convert.ToInt32(Console.ReadLine());
-            System.Console.WriteLine();
-
-            switch(specialty)
-            {
-                case 1:
-                    ps.AddSpecialtyToOrder(hawaiian.Make(ps.PizzaSizes.ElementAt(size - 1), ps.Crust.ElementAt(crust - 1)));
-                    break;
-
-                default:
-                    break;
+                System.Console.WriteLine("\nInvalid Input\n");
             }
         }
 
@@ -282,7 +297,7 @@ namespace PizzaBox.Client
             System.Console.WriteLine("Password: ");
             pass = Console.ReadLine();
             Location.OnlineUser = user;
-            return ps.LoginCheck(user,pass);
+            return PizzaStore.LoginCheck(user,pass);
         }
 
         public void PrintCustomers()
@@ -294,13 +309,13 @@ namespace PizzaBox.Client
         public void PrintOrder()
         {
             System.Console.WriteLine();
-            System.Console.WriteLine(ps.newOrder);
+            System.Console.WriteLine(PizzaStore.newOrder);
         }
 
         public void PrintInventory()
         {
             System.Console.WriteLine();
-            foreach (KeyValuePair<string, int> item in ps.Inventory)
+            foreach (KeyValuePair<string, int> item in PizzaStore.Inventory)
             {
                 Console.WriteLine($"Ingredient: {item.Key}, Stock: {item.Value}");
             }
@@ -309,7 +324,7 @@ namespace PizzaBox.Client
         public void PrintPreviousOrders()
         {
             System.Console.WriteLine();
-            foreach (Orders i in ps.OrderList)
+            foreach (Orders i in PizzaStore.OrderList)
             {
                 if(Location.OnlineUser == i.UsernameOfCustomer)
                 {
@@ -327,14 +342,20 @@ namespace PizzaBox.Client
                 count++;
                 System.Console.WriteLine(count.ToString() + "." + i);
             }
-            ps = StoreLocations.ElementAt(Int32.Parse(Console.ReadLine()) - 1);
-
-            System.Console.WriteLine($"New Location is {ps}");
+            try
+            {
+                PizzaStore = StoreLocations.ElementAt(Int32.Parse(Console.ReadLine()) - 1);
+            }
+            catch (FormatException)
+            {
+                System.Console.WriteLine("\nInvalid Input\n");
+            }
+            System.Console.WriteLine($"New Location is {PizzaStore}");
         }
 
         public void ConfirmOrder()
         {
-            ps.AddOrderToList();
+            PizzaStore.AddOrderToList();
         }
     }
 }
