@@ -10,19 +10,11 @@ namespace PizzaBox.Domain.Abstracts
         public Size PizzaSize { get; set; }
         public Crust PizzaCrust { get; set; }
 
-        private Toppings[] userToppings = new Toppings[MAXTOPPINGS];
+        public Toppings[] UserToppings{ get; set; }
 
-        public Toppings[] UserToppings
+        public ABasePizza()
         {
-            get
-            {
-                return userToppings;
-            }
-
-            protected set
-            {
-                userToppings = value;
-            }
+            UserToppings = new Toppings[MAXTOPPINGS];
         }
 
         public abstract decimal calculatePizzaPrice();

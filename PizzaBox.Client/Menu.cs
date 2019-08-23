@@ -8,13 +8,15 @@ namespace PizzaBox.Client
 {
     public class Menu
     {
-        public Location ps = new Location(
-                "Pizza Place",
-                "101 Pizza St",
-                "Suite 1",
-                "77777",
-                "FlavorTown",
-                "Texas");
+        static List<Location> StoreLocations = new List<Location>()
+        {
+            {new Location("Pizza Place", "101 Pizza St", "Suite 1", "77777", "FlavorTown", "Texas")},
+            {new Location("Pizza Place 2", "102 Pizza St", "Suite 2", "77777", "FlavorTown", "Texas")},
+            {new Location("Pizza Place 3", "103 Pizza St", "Suite 3", "77777", "FlavorTown", "Texas")},
+            {new Location("Pizza Place 4", "104 Pizza St", "Suite 4", "77777", "FlavorTown", "Texas")}
+        };
+
+        public Location ps = StoreLocations.ElementAt(0);
 
         public Hawaiian hawaiian = new Hawaiian();
 
@@ -90,7 +92,7 @@ namespace PizzaBox.Client
                     System.Console.WriteLine("All fields must have a value");
                 }
             }while((name == "") || (addr == "") || (addr2 == "") || (zip == "") || (city == "") || (state == "") || (user == "") || (pass == ""));
-            ps.AddCustomer(user, pass, name, addr, addr2, zip, city, state);
+            ps.AddCustomer(new Login(user,pass), name, addr, addr2, zip, city, state);
         }
 
         public void UserMenu()
@@ -105,6 +107,7 @@ namespace PizzaBox.Client
                 System.Console.WriteLine("3. Preview Order");
                 System.Console.WriteLine("4. Confirm Order");
                 System.Console.WriteLine("5. Print Previous Orders");
+                System.Console.WriteLine("6. Change Locations");
                 System.Console.WriteLine("7. Quit");
 
                 try
@@ -133,18 +136,26 @@ namespace PizzaBox.Client
                         break;
 
                     case 4:
-                        if(ps.CheckLastOrder())
+                        if(!ps.CheckLastLocation())
                         {
-                            ConfirmOrder();
+                            System.Console.WriteLine("\nYou can only order from 1 location a day");
+                        }
+                        else if(!ps.CheckLastOrder())
+                        {
+                            System.Console.WriteLine("\nToo soon after last order");
                         }
                         else
                         {
-                            System.Console.WriteLine("Too soon after last order");
+                            ConfirmOrder();
                         }                    
                         break;
 
                     case 5:
                         PrintPreviousOrders();
+                        break;
+
+                    case 6:
+                        ChangeLocations();
                         break;
 
                     default:
@@ -257,14 +268,14 @@ namespace PizzaBox.Client
             user = Console.ReadLine();
             System.Console.WriteLine("Password: ");
             pass = Console.ReadLine();
-            ps.OnlineUser = user;
+            Location.OnlineUser = user;
             return ps.LoginCheck(user,pass);
         }
 
         public void PrintCustomers()
         {
             System.Console.WriteLine();
-            ps.CustomerList.ForEach(Console.WriteLine);
+            Location.CustomerList.ForEach(Console.WriteLine);
         }
 
         public void PrintOrder()
@@ -287,11 +298,25 @@ namespace PizzaBox.Client
             System.Console.WriteLine();
             foreach (Orders i in ps.OrderList)
             {
-                if(ps.OnlineUser == i.UsernameOfCustomer)
+                if(Location.OnlineUser == i.UsernameOfCustomer)
                 {
                     System.Console.WriteLine(i);
                 }
             }
+        }
+
+        public void ChangeLocations()
+        {
+            int count = 0;
+            System.Console.WriteLine("\nSelect A Location: ");
+            foreach (var i in StoreLocations)
+            {
+                count++;
+                System.Console.WriteLine(count.ToString() + "." + i);
+            }
+            ps = StoreLocations.ElementAt(Int32.Parse(Console.ReadLine()) - 1);
+
+            System.Console.WriteLine($"New Location is {ps}");
         }
 
         public void ConfirmOrder()

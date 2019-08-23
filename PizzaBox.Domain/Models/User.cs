@@ -4,14 +4,13 @@ namespace PizzaBox.Domain.Models
 {
     public class User : ANameAndAddress
     {
-        public string UserName { get; set; }  
-        public string Password { get; set; }
         public DateTime LastOrder { get; set; }
+        public Login UserLogin { get; set; }
+        public Location UserLocation { get; set; }
 
-        public User(string user, string pass, string name, string addr, string addr2, string zip, string city, string state)
+        public User(Login l, string name, string addr, string addr2, string zip, string city, string state)
         {
-            UserName = user;
-            Password = pass;
+            UserLogin = l;
             Name = name;
             Address = addr;
             Address2 = addr2;

@@ -7,21 +7,9 @@ namespace PizzaBox.Domain.Models
     public class Orders
     {
         public string UsernameOfCustomer { get; }
-        public decimal Price { get; set; }
-        private List<ABasePizza> pizzas = new List<ABasePizza>();
+        public decimal Price { get; set; } 
 
-        public List<ABasePizza> Pizzas
-        {
-            get
-            {
-                return pizzas;
-            }
-
-            protected set
-            {
-                pizzas = value;
-            }
-        } 
+        public List<ABasePizza> Pizzas{ get; set; }
 
         public DateTime OrderTime { get; set; }
 
@@ -29,6 +17,7 @@ namespace PizzaBox.Domain.Models
         {
             UsernameOfCustomer = user;
             Price = 0;
+            Pizzas = new List<ABasePizza>();
         }
 
         public decimal calculateOrderPrice()
