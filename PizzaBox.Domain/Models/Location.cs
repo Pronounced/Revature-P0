@@ -17,7 +17,7 @@ namespace PizzaBox.Domain.Models
 
         public IDictionary<string, int> Inventory { get; protected set; }
 
-        public List<Toppings> StoreToppings { get; set; }
+        public List<ToppingsDb> StoreToppings { get; set; }
 
         public List<Size> PizzaSizes { get; set; }
 
@@ -42,15 +42,16 @@ namespace PizzaBox.Domain.Models
             State = state;
 
 
-            StoreToppings = new List<Toppings>()
-            {
-                {new Toppings("Pepperoni", 1)},
-                {new Toppings("Sausage", 1)},
-                {new Toppings("Mushroom", 1)},
-                {new Toppings("Olive", 1)},
-                {new Toppings("Ham", 1)},
-                {new Toppings("Pineapple", 1)}
-            };
+            StoreToppings = db.ToppingsDb.ToList();
+            // new List<Toppings>()
+            // {
+            //     {new Toppings("Pepperoni", 1)},
+            //     {new Toppings("Sausage", 1)},
+            //     {new Toppings("Mushroom", 1)},
+            //     {new Toppings("Olive", 1)},
+            //     {new Toppings("Ham", 1)},
+            //     {new Toppings("Pineapple", 1)}
+            // };
 
             PizzaSizes = new List<Size>()
             {
@@ -87,7 +88,7 @@ namespace PizzaBox.Domain.Models
 
         public void AddCustomToOrder(int size, int crust, List<int> list)
         {
-            Toppings[] toppingsList = new Toppings[Pizza.MAXTOPPINGS];
+            ToppingsDb[] toppingsList = new ToppingsDb[Pizza.MAXTOPPINGS];
 
             foreach (int i in list)
             {

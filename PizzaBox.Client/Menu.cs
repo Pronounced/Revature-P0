@@ -196,19 +196,32 @@ namespace PizzaBox.Client
             {
                 count = 0;
                 System.Console.WriteLine("Select A Topping (Minimum of " + Pizza.MINTOPPINGS + ", Max of " + Pizza.MAXTOPPINGS + "): ");
-                foreach (Toppings i in ps.StoreToppings)
+                foreach (Data.Entities.ToppingsDb i in ps.StoreToppings)
+                {
+                    count++;
+                    System.Console.WriteLine(count.ToString() + ". " + i.Name);
+                }
+                userToppings = Int32.Parse(Console.ReadLine());
+                toppings.Add(userToppings);                   
+                System.Console.WriteLine();
+            }while(toppings.Count < Pizza.MINTOPPINGS);
+            do
+            {
+                count = 0;
+                System.Console.WriteLine("Select A Topping (Minimum of " + Pizza.MINTOPPINGS + ", Max of " + Pizza.MAXTOPPINGS + "): ");
+                foreach (Data.Entities.ToppingsDb i in ps.StoreToppings)
                 {
                     count++;
                     System.Console.WriteLine(count.ToString() + ". " + i.Name);
                 }
                 System.Console.WriteLine("-1 to finish");
                 userToppings = Int32.Parse(Console.ReadLine());
-                if (userToppings != -1 && toppings.Count <= Pizza.MAXTOPPINGS)
+                if (userToppings != -1 && toppings.Count < Pizza.MAXTOPPINGS)
                 {
                     toppings.Add(userToppings);                   
                 }
                 System.Console.WriteLine();
-            }while(userToppings != -1 && toppings.Count <= Pizza.MAXTOPPINGS);
+            }while(userToppings != -1 && toppings.Count < Pizza.MAXTOPPINGS);
             ps.AddCustomToOrder(size, crust, toppings);
         }
 
