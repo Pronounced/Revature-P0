@@ -25,7 +25,7 @@ namespace PizzaBox.Domain.Models
 
         public List<string> Specialties { get; set; }
 
-        Custom CustomPizza;
+        //Custom CustomPizza;
 
         public Orders newOrder;
 
@@ -65,16 +65,24 @@ namespace PizzaBox.Domain.Models
             };
 
             CustomerList = new List<User>();
-            foreach (var i in db.Users.ToList())
-            {
-                CustomerList.Add(new User(new Login(db.Login.ToList().ElementAt(i.LoginId - 1).UserName, db.Login.ToList().ElementAt(i.LoginId - 1).Password),
-                i.Name,i.Address,
-                i.Address2,
-                i.ZipCode,
-                i.City,
-                i.State));
-            }
+            // foreach (var i in db.Users.ToList())
+            // {
+            //     CustomerList.Add(new User(new Login(db.Login.ToList().ElementAt(i.LoginId).UserName, db.Login.ToList().ElementAt(i.LoginId).Password),
+            //     i.Name,i.Address,
+            //     i.Address2,
+            //     i.ZipCode,
+            //     i.City,
+            //     i.State));
+            // }
             OrderList = new List<Orders>();
+            foreach (var i in db.Orders.ToList())
+            {
+                OrderList.Add(new Orders(i.CustUserName)
+                {
+                    Price = i.Price,
+                    OrderTime = i.OrderTime
+                });
+            }
             Inventory = new Dictionary<string, int>();
             newOrder = new Orders(OnlineUser);
 
@@ -107,16 +115,16 @@ namespace PizzaBox.Domain.Models
         {
             User newCustomer = new User(l, name, addr, addr2, zip, city, state);
             CustomerList.Add(newCustomer);
-            db.Login.Add( new DataB.Login(){UserName = l.UserName, Password = l.Password});
-            db.Users.Add(new DataB.Users()
-            {
-                Name = name,
-                Address = addr,
-                Address2 = addr2,
-                ZipCode = zip,
-                City = city,
-                State = state
-            });
+            // db.Login.Add( new DataB.Login(){UserName = l.UserName, Password = l.Password});
+            // db.Users.Add(new DataB.Users()
+            // {
+            //     Name = name,
+            //     Address = addr,
+            //     Address2 = addr2,
+            //     ZipCode = zip,
+            //     City = city,
+            //     State = state
+            // });
             //db.SaveChanges();
         }
 
@@ -154,7 +162,7 @@ namespace PizzaBox.Domain.Models
             });
             newOrder = new Orders(OnlineUser);
            
-            db.SaveChanges();
+           db.SaveChanges();
         }
 
         public bool CheckLastLocation()

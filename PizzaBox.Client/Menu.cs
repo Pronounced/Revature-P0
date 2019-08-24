@@ -180,7 +180,7 @@ namespace PizzaBox.Client
                 foreach (Size i in PizzaStore.PizzaSizes)
                 {
                     count++;
-                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                    System.Console.WriteLine(count.ToString() + "." + i.Name + " " + i.Price);
                 }
                 size = Convert.ToInt32(Console.ReadLine());
                 System.Console.WriteLine();
@@ -191,7 +191,7 @@ namespace PizzaBox.Client
                 foreach (Crust i in PizzaStore.Crust)
                 {
                     count++;
-                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                    System.Console.WriteLine(count.ToString() + "." + i.Name + " " + i.Price);
                 }
                 crust = Convert.ToInt32(Console.ReadLine());
                 System.Console.WriteLine();
@@ -203,7 +203,7 @@ namespace PizzaBox.Client
                     foreach (Toppings i in PizzaStore.StoreToppings)
                     {
                         count++;
-                        System.Console.WriteLine(count.ToString() + ". " + i.Name);
+                        System.Console.WriteLine(count.ToString() + "." + i.Name + " " + i.Price);
                     }
                     userToppings = Int32.Parse(Console.ReadLine());
                     toppings.Add(userToppings);                   
@@ -216,7 +216,7 @@ namespace PizzaBox.Client
                     foreach (Toppings i in PizzaStore.StoreToppings)
                     {
                         count++;
-                        System.Console.WriteLine(count.ToString() + ". " + i.Name);
+                        System.Console.WriteLine(count.ToString() + "." + i.Name + " " + i.Price);
                     }
                     System.Console.WriteLine("-1 to finish");
                     userToppings = Int32.Parse(Console.ReadLine());
@@ -257,7 +257,7 @@ namespace PizzaBox.Client
                 foreach (Size i in PizzaStore.PizzaSizes)
                 {
                     count++;
-                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                    System.Console.WriteLine(count.ToString() + "." + i.Name + " " + i.Price);
                 }
                 size = Convert.ToInt32(Console.ReadLine());
                 System.Console.WriteLine();
@@ -268,7 +268,7 @@ namespace PizzaBox.Client
                 foreach (Crust i in PizzaStore.Crust)
                 {
                     count++;
-                    System.Console.WriteLine(count.ToString() + "." + i.Name);
+                    System.Console.WriteLine(count.ToString() + "." + i.Name + " " + i.Price);
                 }
                 crust = Convert.ToInt32(Console.ReadLine());
                 System.Console.WriteLine();
