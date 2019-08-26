@@ -90,14 +90,8 @@ namespace PizzaBox.Domain.Models
                 {
                     Price = i.Price,
                     OrderTime = i.OrderTime,
+                    OrderId = i.OrdersId
                 });
-                foreach (var x in db.Pizza.ToList())
-                {
-                    if(i.OrdersId == x.OrdersId)
-                    {
-                        
-                    }
-                }
             }
 
             Inventory = new Dictionary<string, int>();
