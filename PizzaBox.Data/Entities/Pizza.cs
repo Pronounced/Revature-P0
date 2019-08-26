@@ -9,8 +9,10 @@ namespace PizzaBox.Data.Entities
         public int CrustId { get; set; }
         public int SizeId { get; set; }
         public decimal Price { get; set; }
+        public int OrdersId { get; set; }
 
         public virtual Crust Crust { get; set; }
+        public virtual Orders Orders { get; set; }
         public virtual Size Size { get; set; }
     }
 }

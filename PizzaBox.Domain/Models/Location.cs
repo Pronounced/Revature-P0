@@ -4,6 +4,7 @@ using System.Linq;
 using DataB = PizzaBox.Data.Entities;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Recipes;
+using Microsoft.EntityFrameworkCore;
 
 namespace PizzaBox.Domain.Models
 {
@@ -13,7 +14,7 @@ namespace PizzaBox.Domain.Models
 
         public static List<User> CustomerList { get; protected set; }
 
-        public List<Orders> OrderList { get; protected set; }
+        public List<Order> OrderList { get; protected set; }
 
         public IDictionary<string, int> Inventory { get; protected set; }
 
@@ -27,7 +28,7 @@ namespace PizzaBox.Domain.Models
 
         //Custom CustomPizza;
 
-        public Orders newOrder;
+        public Order newOrder;
 
         DataB.PizzaBoxDB2Context db = new DataB.PizzaBoxDB2Context();
 
@@ -44,19 +45,19 @@ namespace PizzaBox.Domain.Models
             StoreToppings = new List<Toppings>();
             foreach (var i in db.ToppingsDb.ToList())
             {
-                StoreToppings.Add(new Toppings(i.Name,i.Price));
+                StoreToppings.Add(new Toppings(i.Name,i.Price,i.ToppingsId));
             }
 
             PizzaSizes = new List<Size>();
             foreach (var i in db.Size.ToList())
             {
-                PizzaSizes.Add(new Size(i.Name, i.Price));
+                PizzaSizes.Add(new Size(i.Name, i.Price, i.SizeId));
             }
 
             Crust = new List<Crust>();
             foreach (var i in db.Crust.ToList())
             {
-                Crust.Add(new Crust(i.Name, i.Price));
+                Crust.Add(new Crust(i.Name, i.Price, i.CrustId));
             }
 
             Specialties = new List<string>()
@@ -65,26 +66,42 @@ namespace PizzaBox.Domain.Models
             };
 
             CustomerList = new List<User>();
-            // foreach (var i in db.Users.ToList())
-            // {
-            //     CustomerList.Add(new User(new Login(db.Login.ToList().ElementAt(i.LoginId).UserName, db.Login.ToList().ElementAt(i.LoginId).Password),
-            //     i.Name,i.Address,
-            //     i.Address2,
-            //     i.ZipCode,
-            //     i.City,
-            //     i.State));
-            // }
-            OrderList = new List<Orders>();
+            foreach (var i in db.Users.Include(i => i.Login).ToList())
+            {
+                CustomerList.Add
+                (
+                    new User
+                    (
+                        new Login(i.Login.UserName, i.Login.Password),
+                        i.Name,
+                        i.Address,
+                        i.Address2,
+                        i.ZipCode,
+                        i.City,
+                        i.State
+                    )
+                );
+            }
+
+            OrderList = new List<Order>();
             foreach (var i in db.Orders.ToList())
             {
-                OrderList.Add(new Orders(i.CustUserName)
+                OrderList.Add(new Order(i.CustUserName)
                 {
                     Price = i.Price,
-                    OrderTime = i.OrderTime
+                    OrderTime = i.OrderTime,
                 });
+                foreach (var x in db.Pizza.ToList())
+                {
+                    if(i.OrdersId == x.OrdersId)
+                    {
+                        
+                    }
+                }
             }
+
             Inventory = new Dictionary<string, int>();
-            newOrder = new Orders(OnlineUser);
+            newOrder = new Order(OnlineUser);
 
             Inventory.Add("Pepperoni", 50);
             Inventory.Add("Mushroom", 50);
@@ -115,17 +132,20 @@ namespace PizzaBox.Domain.Models
         {
             User newCustomer = new User(l, name, addr, addr2, zip, city, state);
             CustomerList.Add(newCustomer);
-            // db.Login.Add( new DataB.Login(){UserName = l.UserName, Password = l.Password});
-            // db.Users.Add(new DataB.Users()
-            // {
-            //     Name = name,
-            //     Address = addr,
-            //     Address2 = addr2,
-            //     ZipCode = zip,
-            //     City = city,
-            //     State = state
-            // });
-            //db.SaveChanges();
+            var loginKey = new DataB.Login(){UserName = l.UserName, Password = l.Password};
+            db.Login.Add(loginKey);
+            db.Users.Add(new DataB.Users()
+            {
+                Name = name,
+                Address = addr,
+                Address2 = addr2,
+                ZipCode = zip,
+                City = city,
+                State = state,
+                LoginId =  loginKey.LoginId
+                
+            });
+            db.SaveChanges();
         }
 
         public bool LoginCheck(string user, string pass)
@@ -134,7 +154,7 @@ namespace PizzaBox.Domain.Models
             {
                 if((user == i.UserLogin.UserName) && (pass == i.UserLogin.Password))
                 {
-                    newOrder = new Orders(user);
+                    newOrder = new Order(user);
                     OnlineUser = user;
                     return true;
                 }
@@ -154,15 +174,27 @@ namespace PizzaBox.Domain.Models
             }
             newOrder.OrderTime = DateTime.Now;
             OrderList.Add(newOrder);
-            db.Orders.Add(new DataB.Orders()
+            var dbOrders = new DataB.Orders()
             {
                 CustUserName = newOrder.UsernameOfCustomer,
                 Price = newOrder.Price,
                 OrderTime = newOrder.OrderTime
-            });
-            newOrder = new Orders(OnlineUser);
-           
-           db.SaveChanges();
+            };
+            db.Orders.Add(dbOrders);
+
+            foreach (var i in newOrder.Pizzas)
+            {
+                db.Pizza.Add(new DataB.Pizza()
+                {
+                    CrustId = i.PizzaCrust.CrustKey,
+                    SizeId = i.PizzaSize.SizeKey,
+                    Price = i.calculatePizzaPrice(),
+                    OrdersId = dbOrders.OrdersId
+                });
+            }
+            db.SaveChanges();
+
+            newOrder = new Order(OnlineUser);
         }
 
         public bool CheckLastLocation()

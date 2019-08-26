@@ -4,11 +4,13 @@ namespace PizzaBox.Domain.Abstracts
     {
         string Name { get; set; }
         decimal Price { get; set; }
+        int Key { get; set; }
 
-        public AInventory(string name, decimal price)
+        public AInventory(string name, decimal price, int key)
         {
             Name = name;
             Price = price;
+            Key = key;
         }
     }
 }

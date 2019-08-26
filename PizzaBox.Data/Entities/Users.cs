@@ -12,7 +12,7 @@ namespace PizzaBox.Data.Entities
         public string ZipCode { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public int LoginId { get; set; }
+        public int? LoginId { get; set; }
 
         public virtual Login Login { get; set; }
     }

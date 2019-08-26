@@ -22,7 +22,6 @@ namespace PizzaBox.Domain.Models
                     toppingsPrice = toppingsPrice + UserToppings[i].Price;
                 }
             }
-
             
             return (PizzaSize.Price + toppingsPrice);
         }

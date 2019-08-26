@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using PizzaBox.Domain.Abstracts;
+using Microsoft.EntityFrameworkCore;
+using DataB = PizzaBox.Data.Entities;
 
 namespace PizzaBox.Domain.Models
 {
-    public class Orders
+    public class Order
     {
         public string UsernameOfCustomer { get; }
         public decimal Price { get; set; } 
@@ -13,7 +15,10 @@ namespace PizzaBox.Domain.Models
 
         public DateTime OrderTime { get; set; }
 
-        public Orders(string user)
+        DataB.PizzaBoxDB2Context db = new DataB.PizzaBoxDB2Context();
+
+
+        public Order(string user)
         {
             UsernameOfCustomer = user;
             Price = 0;
@@ -46,6 +51,7 @@ namespace PizzaBox.Domain.Models
             }
             Pizzas.Add(p);
             calculateOrderPrice();
+
         }
 
         public void PrintPizza()

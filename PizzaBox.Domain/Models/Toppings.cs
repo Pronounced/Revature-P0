@@ -6,11 +6,13 @@ namespace PizzaBox.Domain.Models
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
+        public int ToppingsKey { get; set; }
 
-        public Toppings(string name, decimal price) : base(name, price)
+        public Toppings(string name, decimal price, int key) : base(name, price, key)
         {
             Name = name;
             Price = price;
+            ToppingsKey = key;
         }
     }
 }
