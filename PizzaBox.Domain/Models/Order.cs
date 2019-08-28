@@ -14,6 +14,7 @@ namespace PizzaBox.Domain.Models
         public List<ABasePizza> Pizzas{ get; set; }
 
         public DateTime OrderTime { get; set; }
+        public int OrderId { get; set; }
 
         DataB.PizzaBoxDB2Context db = new DataB.PizzaBoxDB2Context();
 
