@@ -67,7 +67,7 @@ namespace PizzaBox.Domain.Models
                 orderPizzas.Add(i.ToString());
             }
             string dollars = Price.ToString("C");
-            return $"ORDER: \nName: {UsernameOfCustomer} \nPrice: {dollars} \nPizzas: \n{String.Join("\n", orderPizzas.ToArray())}";
+            return $"\nORDER: \nName: {UsernameOfCustomer} \nPrice: {dollars} \nPizzas: {String.Join("\n", orderPizzas.ToArray())}";
         }   
     }
 }

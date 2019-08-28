@@ -20,6 +20,7 @@ namespace PizzaBox.Data.Entities
         public virtual DbSet<Login> Login { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Pizza> Pizza { get; set; }
+        public virtual DbSet<PizzaToppingsRel> PizzaToppingsRel { get; set; }
         public virtual DbSet<Size> Size { get; set; }
         public virtual DbSet<ToppingsDb> ToppingsDb { get; set; }
         public virtual DbSet<Users> Users { get; set; }
@@ -120,6 +121,26 @@ namespace PizzaBox.Data.Entities
                     .HasForeignKey(d => d.SizeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SizeId");
+            });
+
+            modelBuilder.Entity<PizzaToppingsRel>(entity =>
+            {
+                entity.HasKey(e => e.RelId)
+                    .HasName("PK__PizzaTop__2DA9EFAE4778BC2E");
+
+                entity.ToTable("PizzaToppingsRel", "Pizza");
+
+                entity.HasOne(d => d.Pizza)
+                    .WithMany(p => p.PizzaToppingsRel)
+                    .HasForeignKey(d => d.PizzaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PizzaTopp__Pizza__5FB337D6");
+
+                entity.HasOne(d => d.Toppings)
+                    .WithMany(p => p.PizzaToppingsRel)
+                    .HasForeignKey(d => d.ToppingsId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PizzaTopp__Toppi__60A75C0F");
             });
 
             modelBuilder.Entity<Size>(entity =>

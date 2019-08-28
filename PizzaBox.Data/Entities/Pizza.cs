@@ -5,6 +5,11 @@ namespace PizzaBox.Data.Entities
 {
     public partial class Pizza
     {
+        public Pizza()
+        {
+            PizzaToppingsRel = new HashSet<PizzaToppingsRel>();
+        }
+
         public int PizzaId { get; set; }
         public int CrustId { get; set; }
         public int SizeId { get; set; }
@@ -14,5 +19,6 @@ namespace PizzaBox.Data.Entities
         public virtual Crust Crust { get; set; }
         public virtual Orders Orders { get; set; }
         public virtual Size Size { get; set; }
+        public virtual ICollection<PizzaToppingsRel> PizzaToppingsRel { get; set; }
     }
 }

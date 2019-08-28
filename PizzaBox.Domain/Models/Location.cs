@@ -86,18 +86,33 @@ namespace PizzaBox.Domain.Models
             OrderList = new List<Order>();
             foreach (var i in db.Orders.ToList())
             {
-                OrderList.Add(new Order(i.CustUserName)
+                newOrder = new Order(i.CustUserName)
                 {
                     Price = i.Price,
                     OrderTime = i.OrderTime,
-                });
+                };
+
                 foreach (var x in db.Pizza.ToList())
                 {
+                    var dbToPizza = new Pizza(new Size(x.Size.Name, x.Size.Price, x.SizeId), new Crust(x.Crust.Name, x.Crust.Price, x.CrustId), new Toppings[Pizza.MAXTOPPINGS]);
+
+                    int count = 0;
+                    foreach (var t in db.PizzaToppingsRel.ToList())
+                    {
+                        if(x.PizzaId == t.PizzaId)
+                        {
+                            dbToPizza.UserToppings[count] = new Toppings(t.Toppings.Name, t.Toppings.Price, t.Toppings.ToppingsId);
+                        }
+                        count++;
+                    }
+
                     if(i.OrdersId == x.OrdersId)
                     {
-                        
+                        newOrder.Pizzas.Add(dbToPizza);
                     }
                 }
+
+                OrderList.Add(newOrder);
             }
 
             Inventory = new Dictionary<string, int>();
@@ -116,9 +131,11 @@ namespace PizzaBox.Domain.Models
         {
             Toppings[] toppingsList = new Toppings[Pizza.MAXTOPPINGS];
 
+            int index = 0;
             foreach (int i in list)
             {
-                toppingsList[i - 1] = StoreToppings.ElementAt(i - 1);
+                toppingsList[index] = StoreToppings.ElementAt(i - 1);
+                index++;
             }
             newOrder.AddPizzaToOrder(new Custom().Make(PizzaSizes.ElementAt(size - 1), Crust.ElementAt(crust - 1), toppingsList));
         }
@@ -182,15 +199,29 @@ namespace PizzaBox.Domain.Models
             };
             db.Orders.Add(dbOrders);
 
+            
             foreach (var i in newOrder.Pizzas)
             {
-                db.Pizza.Add(new DataB.Pizza()
+                var dbPizza = new DataB.Pizza()
                 {
                     CrustId = i.PizzaCrust.CrustKey,
                     SizeId = i.PizzaSize.SizeKey,
                     Price = i.calculatePizzaPrice(),
                     OrdersId = dbOrders.OrdersId
-                });
+                };
+                db.Pizza.Add(dbPizza);
+
+                foreach (var x in i.UserToppings)
+                {
+                    if(x != null)
+                    {
+                        db.PizzaToppingsRel.Add(new DataB.PizzaToppingsRel()
+                        {
+                            PizzaId = dbPizza.PizzaId,
+                            ToppingsId = x.ToppingsKey
+                        });
+                    }
+                }
             }
             db.SaveChanges();
 
