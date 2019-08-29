@@ -101,9 +101,9 @@ namespace PizzaBox.Domain.Models
                     {
                         if(x.PizzaId == t.PizzaId)
                         {
-                            dbToPizza.UserToppings[count] = new Toppings(t.Toppings.Name, t.Toppings.Price, t.Toppings.ToppingsId);
+                             dbToPizza.UserToppings[count] = new Toppings(t.Toppings.Name, t.Toppings.Price, t.Toppings.ToppingsId);
+                             count++;
                         }
-                        count++;
                     }
 
                     if(i.OrdersId == x.OrdersId)
