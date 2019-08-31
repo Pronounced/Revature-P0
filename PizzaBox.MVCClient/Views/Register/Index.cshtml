@@ -1,0 +1,49 @@
+@model PizzaBox.MVCClient.Models.RegisterViewModel
+
+<style>
+    input{
+        display: inline-block;
+        float: right;
+    }
+</style>
+
+ <div class="text-center">
+    <h1>Register</h1>
+</div>
+<div style="width: 400px">
+    <form action="/register/index" method="POST">
+        <div>
+            <label for="user">Username</label>
+            <input type="text" asp-for="@Model.Login.UserName" id="user">
+        </div>
+        <div>
+            <label for="pass">Password</label>
+            <input type="password" asp-for="@Model.Login.Password" id="pass">
+        </div>
+        <div>
+            <label for="name">Name</label>
+            <input type="text" asp-for="@Model.User.Name" id="name">
+        </div>
+        <div>
+            <label for="addr1">Address</label>
+            <input type="text" asp-for="@Model.User.Address" id="addr1">
+        </div>
+        <div>
+            <label for="addr2">Address 2</label>
+            <input type="text" asp-for="@Model.User.Address2" id="addr2">
+        </div>
+        <div>
+            <label for="zip">Zip Code</label>
+            <input type="text" asp-for="@Model.User.ZipCode" id="zip">
+        </div>
+        <div>
+            <label for="city">City</label>
+            <input type="text" asp-for="@Model.User.City" id="city">
+        </div>
+        <div>
+            <label for="state">State</label>
+            <input type="text" asp-for="@Model.User.State" id="state">
+        </div>
+        <input type="submit" value="Submit now" />
+    </form>
+</div>

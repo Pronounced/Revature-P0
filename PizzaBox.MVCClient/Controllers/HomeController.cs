@@ -13,29 +13,38 @@ namespace PizzaBox.MVCClient.Controllers
     public class HomeController : Controller
     {
         public pdb.PizzaBoxDB2Context _db = new pdb.PizzaBoxDB2Context();
-        public List<Login> LoginList { get; set; }
+        public static Location Store { get; set; }        
 
         [HttpGet]
         public IActionResult Index()
         {
+            pdb.Location loc = _db.Location.ToList().ElementAt(0);
+            Store = new Location(loc.Name, loc.Address, loc.Address2, loc.ZipCode, loc.City, loc.State);
             return View();
         }
 
         [HttpPost]
         public IActionResult Index(string user, string pass)
         {
-            LoginList = new List<Login>();
-            foreach (var item in _db.Login.ToList())
+            if(ModelState.IsValid)
             {
-                if(user == item.UserName && pass == item.Password)
+                foreach (var item in _db.Login.ToList())
                 {
-                    return RedirectToAction("Index", "Order");
-                }
+                    if(user == item.UserName && pass == item.Password)
+                    {
+                        return RedirectToAction("Index", "Order");
+                    }
+                }               
             }
             return View();
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+        
+        public IActionResult Register()
         {
             return View();
         }

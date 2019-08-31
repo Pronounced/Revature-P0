@@ -29,7 +29,7 @@ namespace PizzaBox.Data.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-    #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=tcp:pizza-jarrett.database.windows.net,1433;Initial Catalog=PizzaBoxDB2;Persist Security Info=False;User ID=sqladmin;Password=Password1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
@@ -81,6 +81,10 @@ namespace PizzaBox.Data.Entities
             modelBuilder.Entity<Login>(entity =>
             {
                 entity.ToTable("Login", "Pizza");
+
+                entity.HasIndex(e => e.UserName)
+                    .HasName("UQ__Login__C9F28456F18BB063")
+                    .IsUnique();
 
                 entity.Property(e => e.Password).HasMaxLength(50);
 

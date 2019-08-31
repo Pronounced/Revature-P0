@@ -1,44 +1,49 @@
 @model PizzaBox.MVCClient.Models.OrderViewModel
 
-<form>
-    <div class="text-center">
-        <h2>Order Pizza</h2>
-    </div>
-    
-    <div style="height:35px; margin:0 auto;">
-        <select>
-            @foreach (var item in Model.Location)
-            {
-                <option value="location">@Html.Partial("_LocationPartial", item)</option>
+<head>
+    <title>Order Page</title>
+</head>
+<body>
+    <form>
+        <div class="text-center">
+            <h2>Order Pizza</h2>
+        </div>
+        
+        <div style="height:35px; margin:0 auto;">
+            <select>
+                @foreach (var item in Model.Location)
+                {
+                    <option value="location">@Html.Partial("_LocationPartial", item)</option>
+                }
+            </select>
+        </div>
+        
+        <div style="height:35px;">
+            <select>
+                @foreach (var item in Model.Crust)
+                {
+                    <option value="crust">@Html.Partial("_CrustPartial", item)</option>
+                }
+            </select>
+        </div>
+        
+        <div>
+            <select>
+                @foreach (var item in Model.Size)
+                {
+                    <option value="size">@Html.Partial("_SizePartial", item)</option>
+                }
+            </select>
+        </div>
+        
+        <fieldset>
+            <legend>Select Toppings</legend>
+            @foreach (var item in Model.Toppings)
+            {           
+                <input type="checkbox" name="Pizza Toppings" value='@Html.Partial("_ToppingsPartial", item)'>@Html.Partial("_ToppingsPartial", item)<br>
             }
-        </select>
-    </div>
-    
-    <div style="height:35px;">
-        <select>
-            @foreach (var item in Model.Crust)
-            {
-                <option value="crust">@Html.Partial("_CrustPartial", item)</option>
-            }
-        </select>
-    </div>
-    
-    <div>
-        <select>
-            @foreach (var item in Model.Size)
-            {
-                <option value="size">@Html.Partial("_SizePartial", item)</option>
-            }
-        </select>
-    </div>
-    
-    <fieldset>
-        <legend>Select Toppings</legend>
-        @foreach (var item in Model.Toppings)
-        {           
-            <input type="checkbox" name="Pizza Toppings" value='@Html.Partial("_ToppingsPartial", item)'>@Html.Partial("_ToppingsPartial", item)<br>
-        }
-    </fieldset>
-    
-    <input type="submit" value="Submit now" />
-</form>
+        </fieldset>
+        
+        <input type="submit" value="Submit now" />
+    </form>
+</body>
