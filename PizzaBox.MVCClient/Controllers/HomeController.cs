@@ -30,7 +30,7 @@ namespace PizzaBox.MVCClient.Controllers
             {
                 foreach (var item in _db.Login.ToList())
                 {
-                    if(user == item.UserName && pass == item.Password)
+                    if(Store.LoginCheck(user, pass))
                     {
                         return RedirectToAction("Index", "Order");
                     }

@@ -4,34 +4,34 @@
     <title>Order Page</title>
 </head>
 <body>
-    <form>
+    <form action="/order/index" method="POST">
         <div class="text-center">
             <h2>Order Pizza</h2>
         </div>
         
         <div style="height:35px; margin:0 auto;">
-            <select>
+            <select id="location">
                 @foreach (var item in Model.Location)
                 {
-                    <option value="location">@Html.Partial("_LocationPartial", item)</option>
+                    <option>@Html.Partial("_LocationPartial", item)</option>
                 }
             </select>
         </div>
         
         <div style="height:35px;">
-            <select>
+            <select asp-for="@Model.crustId">
                 @foreach (var item in Model.Crust)
                 {
-                    <option value="crust">@Html.Partial("_CrustPartial", item)</option>
+                    <option value="@item.CrustKey">@Html.Partial("_CrustPartial", item)</option>
                 }
             </select>
         </div>
         
         <div>
-            <select>
+            <select asp-for="@Model.sizeId">
                 @foreach (var item in Model.Size)
                 {
-                    <option value="size">@Html.Partial("_SizePartial", item)</option>
+                    <option value="@item.SizeKey">@Html.Partial("_SizePartial", item)</option>
                 }
             </select>
         </div>
@@ -40,7 +40,7 @@
             <legend>Select Toppings</legend>
             @foreach (var item in Model.Toppings)
             {           
-                <input type="checkbox" name="Pizza Toppings" value='@Html.Partial("_ToppingsPartial", item)'>@Html.Partial("_ToppingsPartial", item)<br>
+                <input type="checkbox" name="tId" value="@item.ToppingsKey">@Html.Partial("_ToppingsPartial", item)<br>
             }
         </fieldset>
         

@@ -13,6 +13,7 @@ namespace PizzaBox.MVCClient.Controllers
         public pdb.PizzaBoxDB2Context _db = new pdb.PizzaBoxDB2Context();
         public OrderViewModel orderModel = new OrderViewModel();
 
+        [HttpGet]
         public IActionResult Index()
         {
             foreach (var i in _db.Location.ToList())
@@ -26,6 +27,14 @@ namespace PizzaBox.MVCClient.Controllers
             orderModel.Toppings = HomeController.Store.StoreToppings;
 
             return View(orderModel);
+        }
+
+        [HttpPost]
+        public IActionResult Index(OrderViewModel ovm, List<int> tId)
+        {
+            HomeController.Store.AddCustomToOrder(ovm.sizeId, ovm.crustId, tId);
+            HomeController.Store.AddOrderToList();
+            return RedirectToAction("Index","Order");
         }
     }
 }

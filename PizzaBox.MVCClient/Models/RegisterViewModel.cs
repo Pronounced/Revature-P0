@@ -4,7 +4,7 @@ namespace PizzaBox.MVCClient.Models
 {
     public class RegisterViewModel
     {
-        string user, pass, name, addr1, addr2, zip, city, state;
+        string user = "", pass = "", name = "", addr1 = "", addr2 = "", zip = "", city = "", state = "";
         public Login Login { get; set; }
         public User User { get; set; }
 
