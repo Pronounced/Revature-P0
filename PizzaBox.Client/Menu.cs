@@ -324,7 +324,7 @@ namespace PizzaBox.Client
         public void PrintPreviousOrders()
         {
             System.Console.WriteLine();
-            foreach (Order i in PizzaStore.OrderList)
+            foreach (Order i in Location.OrderList)
             {
                 if(Location.OnlineUser == i.UsernameOfCustomer)
                 {

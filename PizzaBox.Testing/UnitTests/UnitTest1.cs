@@ -21,7 +21,7 @@ namespace PizzaBox.Testing
             pizzaStore.AddCustomer(new Login("jgreen","1"),"Jarrett Green", "1", "2", "11111", "Houston", "Texas");
             pizzaStore.LoginCheck("jgreen","1");
             pizzaStore.AddCustomToOrder(1,1,new List<int>(){1,2,3});
-            foreach (Order i in pizzaStore.OrderList)
+            foreach (Order i in Location.OrderList)
             {
                 Assert.True(i.Price == 8);
             }
@@ -34,7 +34,7 @@ namespace PizzaBox.Testing
             pizzaStore.LoginCheck("jgreen","1");
             pizzaStore.AddCustomToOrder(1,1,new List<int>(){1,2,3});
             pizzaStore.AddCustomToOrder(2,2,new List<int>(){1,2,3});
-            foreach (Order i in pizzaStore.OrderList)
+            foreach (Order i in Location.OrderList)
             {
                 Assert.True(i.Price == 18);
             }            

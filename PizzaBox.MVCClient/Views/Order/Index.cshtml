@@ -1,49 +1,57 @@
 @model PizzaBox.MVCClient.Models.OrderViewModel
+@{
+    Layout = "../Shared/_OrderLayout.cshtml";
+}
 
 <head>
     <title>Order Page</title>
 </head>
+<div class="text-center">
+    <h1>Order Pizza</h1>
+</div>
+
 <body>
-    <form action="/order/index" method="POST">
-        <div class="text-center">
-            <h2>Order Pizza</h2>
-        </div>
-        
-        <div style="height:35px; margin:0 auto;">
-            <select id="location">
-                @foreach (var item in Model.Location)
-                {
-                    <option>@Html.Partial("_LocationPartial", item)</option>
+    <div style="width: 30%; float: left">
+        <form action="/order/index" id="pizza" method="POST">
+            <div style="height:35px; margin:0 auto;">
+                <select id="location">
+                    @foreach (var item in Model.Location)
+                    {
+                        <option>@Html.Partial("_LocationPartial", item)</option>
+                    }
+                </select>
+            </div>
+            
+            <div style="height:35px;">
+                <select asp-for="@Model.crustId">
+                    @foreach (var item in Model.Crust)
+                    {
+                        <option value="@item.CrustKey">@Html.Partial("_CrustPartial", item)</option>
+                    }
+                </select>
+            </div>
+            
+            <div>
+                <select asp-for="@Model.sizeId">
+                    @foreach (var item in Model.Size)
+                    {
+                        <option value="@item.SizeKey">@Html.Partial("_SizePartial", item)</option>
+                    }
+                </select>
+            </div>
+            
+            <fieldset>
+                <legend>Select Toppings</legend>
+                @foreach (var item in Model.Toppings)
+                {           
+                    <input type="checkbox" name="tId" value="@item.ToppingsKey">@Html.Partial("_ToppingsPartial", item)<br>
                 }
-            </select>
-        </div>
-        
-        <div style="height:35px;">
-            <select asp-for="@Model.crustId">
-                @foreach (var item in Model.Crust)
-                {
-                    <option value="@item.CrustKey">@Html.Partial("_CrustPartial", item)</option>
-                }
-            </select>
-        </div>
-        
-        <div>
-            <select asp-for="@Model.sizeId">
-                @foreach (var item in Model.Size)
-                {
-                    <option value="@item.SizeKey">@Html.Partial("_SizePartial", item)</option>
-                }
-            </select>
-        </div>
-        
-        <fieldset>
-            <legend>Select Toppings</legend>
-            @foreach (var item in Model.Toppings)
-            {           
-                <input type="checkbox" name="tId" value="@item.ToppingsKey">@Html.Partial("_ToppingsPartial", item)<br>
-            }
-        </fieldset>
-        
-        <input type="submit" value="Submit now" />
-    </form>
+            </fieldset>
+        </form>
+        <input type="submit" value="Submit now" form="pizza"/>
+        <input type="submit" value="Confirm Order" onclick='location.href="@Url.Action("Confirm", "Order")'/>
+    </div>
+    <div style="width: 50%; float: right; position: absolute; left: 70%">
+        <h1>Current Order</h1>
+    </div>
 </body>

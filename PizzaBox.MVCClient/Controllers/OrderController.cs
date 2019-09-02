@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PizzaBox.Domain.Models;
+using PizzaBox.Domain.Recipes;
 using PizzaBox.MVCClient.Models;
 using pdb = PizzaBox.Data.Entities;
 
@@ -16,25 +17,29 @@ namespace PizzaBox.MVCClient.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            foreach (var i in _db.Location.ToList())
-            {
-                orderModel.Location.Add(new Location(i.Name,i.Address,i.Address2,i.ZipCode,i.City,i.State));
+            if(Location.OnlineUser != null)
+            {                
+                orderModel.Location = HomeController.StoreLocations;
+                orderModel.Crust = HomeController.Store.Crust;
+                orderModel.Size = HomeController.Store.PizzaSizes;
+                orderModel.Toppings = HomeController.Store.StoreToppings;
+
+                return View(orderModel);
             }
-            HomeController.Store = orderModel.Location.ElementAt(0);
-
-            orderModel.Crust = HomeController.Store.Crust;
-            orderModel.Size = HomeController.Store.PizzaSizes;
-            orderModel.Toppings = HomeController.Store.StoreToppings;
-
-            return View(orderModel);
+            return RedirectToAction("Index", "Home"); 
         }
 
         [HttpPost]
         public IActionResult Index(OrderViewModel ovm, List<int> tId)
         {
             HomeController.Store.AddCustomToOrder(ovm.sizeId, ovm.crustId, tId);
+            return RedirectToAction("Index", "Order");
+        }
+
+        public IActionResult Confirm()
+        {
             HomeController.Store.AddOrderToList();
-            return RedirectToAction("Index","Order");
+            return RedirectToAction("Index", "OrderHistory");
         }
     }
 }

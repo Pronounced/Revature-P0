@@ -1,0 +1,19 @@
+@model List<PizzaBox.Domain.Models.Order>
+@{
+    Layout = "../Shared/_OrderLayout.cshtml";
+}
+
+<head>
+    <title>History Page</title>
+</head>
+<body>
+    <div class="text-center">
+        <h2>Order History</h2>
+    </div>
+    <div>
+        @foreach (var item in Model)
+        {
+            <span style="white-space: pre-line"><p>@item.ToString()</p></span>
+        }
+    </div>
+</body>

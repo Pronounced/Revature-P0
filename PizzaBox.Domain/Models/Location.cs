@@ -14,7 +14,7 @@ namespace PizzaBox.Domain.Models
 
         public static List<User> CustomerList { get; protected set; }
 
-        public List<Order> OrderList { get; protected set; }
+        public static List<Order> OrderList { get; protected set; }
 
         public IDictionary<string, int> Inventory { get; protected set; }
 
@@ -25,8 +25,6 @@ namespace PizzaBox.Domain.Models
         public List<Crust> Crust { get; set; }
 
         public List<string> Specialties { get; set; }
-
-        //Custom CustomPizza;
 
         public Order newOrder;
 

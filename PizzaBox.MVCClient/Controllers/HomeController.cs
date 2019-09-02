@@ -13,13 +13,20 @@ namespace PizzaBox.MVCClient.Controllers
     public class HomeController : Controller
     {
         public pdb.PizzaBoxDB2Context _db = new pdb.PizzaBoxDB2Context();
-        public static Location Store { get; set; }        
+        public static Location Store { get; set; }  
+        public static List<Location> StoreLocations = new List<Location>();
+      
 
         [HttpGet]
         public IActionResult Index()
         {
-            pdb.Location loc = _db.Location.ToList().ElementAt(0);
-            Store = new Location(loc.Name, loc.Address, loc.Address2, loc.ZipCode, loc.City, loc.State);
+            foreach (var i in _db.Location.ToList())
+            {
+                StoreLocations.Add(new Location(i.Name,i.Address,i.Address2,i.ZipCode,i.City,i.State));
+            }
+            
+            Store = StoreLocations.ElementAt(0);
+            Location.OnlineUser = null;
             return View();
         }
 

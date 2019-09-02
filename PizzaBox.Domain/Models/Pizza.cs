@@ -38,7 +38,7 @@ namespace PizzaBox.Domain.Models
                 }
             }
 
-            return $"\nSize: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join(" ", pizzaToppings)}";
+            return $"\nPrice: {calculatePizzaPrice().ToString("C")}\nSize: {PizzaSize.Name} \nCrust: {PizzaCrust.Name}  \nToppings: {String.Join(" ", pizzaToppings)}";
         }
     }
 }

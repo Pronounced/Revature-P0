@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
 
 namespace PizzaBox.MVCClient.Models
@@ -12,12 +13,14 @@ namespace PizzaBox.MVCClient.Models
         public int crustId { get; set; }
         public int sizeId { get; set; }
         public List<int> ToppingsId { get; set; }
+        public List<ABasePizza> CurrentOrder { get; set; }
 
         
         public OrderViewModel()
         {
             crustId = 0;
             sizeId = 0;
+            CurrentOrder = new List<ABasePizza>(){};
             ToppingsId = new List<int>(){};
             Location = new List<Location>(){};
             Crust = new List<Crust>(){};
