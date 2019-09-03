@@ -20,6 +20,7 @@ namespace PizzaBox.MVCClient.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            StoreLocations = new List<Location>();
             foreach (var i in _db.Location.ToList())
             {
                 StoreLocations.Add(new Location(i.Name,i.Address,i.Address2,i.ZipCode,i.City,i.State));
